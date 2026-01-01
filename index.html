@@ -1,34 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <title>Rajaplaneerija</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="app">
 
-<div class="app">
-  <!-- LEFT: Blockly -->
-  <div id="blocklyDiv"></div>
+    <!-- Top toolbar -->
+    <header class="toolbar">
+      <button>Save</button>
+      <button>Open</button>
+      <button>New</button>
+      <button>Settings</button>
+    </header>
 
-  <!-- RIGHT: PixiJS -->
-  <div class="right">
-    <div class="toolbar">
-      <button class="run" id="runBtn">Render map</button>
-    </div>
-    <div id="pixiContainer"></div>
+    <!-- Main content -->
+    <main class="main">
+
+      <!-- Left side: editor -->
+      <div id="blocklyDiv"></div>
+
+      <!-- Right side: simulation -->
+      <section class="simulation-area">
+
+        <div class="simulation-map">
+          <div id="pixiContainer"></div>
+        </div>
+
+        <div class="sim-controls">
+          <button>Start</button>
+          <button>Select point A</button>
+          <button>Select point B</button>
+          <button class="fullscreen">Fullscreen</button>
+        </div>
+
+        <div class="sim-runs">
+          <div class="run">
+            <span>simulation_runs_this_file_name_1</span>
+            <span class="boxes">▢ ▢ ▢</span>
+          </div>
+          <div class="run">
+            <span>simulation_runs_this_file_name_2</span>
+            <span class="boxes">▢ ▢ ▢</span>
+          </div>
+          <div class="run">
+            <span>simulation_runs_this_file_name_3</span>
+            <span class="boxes">▢ ▢ ▢</span>
+          </div>
+          <div class="run">
+            <span>simulation_runs_this_file_name_4</span>
+            <span class="boxes">▢ ▢ ▢</span>
+          </div>
+          <div class="run">
+            <span>simulation_runs_this_file_name_5</span>
+            <span class="boxes">▢ ▢ ▢</span>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
   </div>
-</div>
-
-<!-- Blockly toolbox -->
-<xml id="toolbox" style="display:none">
-  <category name="Logic" colour="210">
-    <block type="controls_if"></block>
-  </category>
-</xml>
-
-<script src="dist/app.js"></script>
 </body>
+<script src="dist/app.js"></script>
 </html>

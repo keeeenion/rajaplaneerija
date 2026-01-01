@@ -1,13 +1,6 @@
 import * as PIXI from "pixi.js";
 
 const app = new PIXI.Application();
-const container = document.getElementById("pixiContainer");
-
-if (!container) {
-  throw new Error("pixiContainer not found");
-}
-
-/* ---------------- TYPES ---------------- */
 
 interface MapNode {
   id: string;
@@ -168,6 +161,15 @@ function drawDashedLine(
   }
 }
 
+async function drawBackground(asset: any) {
+  const bg = new PIXI.Sprite(asset);
+
+  bg.width = app.screen.width;
+  bg.height = app.screen.height;
+
+  app.stage.addChild(bg);
+}
+
 function drawRoadsAndIntersections(data: MapData, g: PIXI.Graphics) {
   data.edges.forEach(edge => {
     const a = nodeMap.get(edge.from)!;
@@ -293,25 +295,37 @@ class Car {
   }
 }
 
-/* ---------------- BUILD SCENE ---------------- */
+async function initMap(map: string, resize = 4) {
+  const container = document.getElementById("pixiContainer");
+  if (!container) throw new Error("pixiContainer not found");
 
-const g = new PIXI.Graphics();
-drawRoadsAndIntersections(mapData, g);
+  const texture = await PIXI.Assets.load(map)
 
-const cars = mapData.cars.map(c => new Car(c));
+  const width = texture.width / resize;
+  const height = texture.height / resize;
 
+  container.style.width = `${width}px`;
+  container.style.height = `${height}px`;
 
-(async () => {
   await app.init({
-    resizeTo: container,
+    width,
+    height,
     backgroundColor: 0x2f3b45,
     antialias: true,
   });
 
+  // animate cars
+  const cars = mapData.cars.map(c => new Car(c));
   app.ticker.add(ticker => {
     const dt = ticker.elapsedMS / 10;
     cars.forEach(c => c.update(dt));
   });
 
   container.appendChild(app.canvas);
-})()
+
+  const g = new PIXI.Graphics();
+  await drawBackground(texture)
+  // drawRoadsAndIntersections(mapData, g);
+}
+
+initMap("assets/map.png");

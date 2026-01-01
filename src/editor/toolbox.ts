@@ -3,7 +3,7 @@ export const toolbox = {
   contents: [
     {
       kind: 'category',
-      name: 'Logic',
+      name: 'Loogika',
       categorystyle: 'logic_category',
       contents: [
         {
@@ -38,7 +38,7 @@ export const toolbox = {
     },
     {
       kind: 'category',
-      name: 'Loops',
+      name: 'Tsüklid',
       categorystyle: 'loop_category',
       contents: [
         {
@@ -101,7 +101,7 @@ export const toolbox = {
     },
     {
       kind: 'category',
-      name: 'Math',
+      name: 'Matemaatika',
       categorystyle: 'math_category',
       contents: [
         {
@@ -307,7 +307,7 @@ export const toolbox = {
     },
     {
       kind: 'category',
-      name: 'Lists',
+      name: 'Loendid',
       categorystyle: 'list_category',
       contents: [
         {
@@ -413,15 +413,59 @@ export const toolbox = {
     },
     {
       kind: 'category',
-      name: 'Variables',
+      name: 'Muutujad',
       categorystyle: 'variable_category',
       custom: 'VARIABLE',
     },
     {
       kind: 'category',
-      name: 'Functions',
+      name: 'Protseduurid',
       categorystyle: 'procedure_category',
       custom: 'PROCEDURE',
+    },
+    {
+      kind: 'sep',
+    },
+    {
+      kind: 'category',
+      name: 'Maailma konstant',
+      colour: '#5C81A6',
+      contents: [
+        {
+          kind: 'block',
+          type: 'starting_intesection',
+        },
+        {
+          kind: 'block',
+          type: 'finish_intesection',
+        },
+        {
+          kind: 'block',
+          type: 'distance_between_intersections',
+        },
+      ],
+    },
+    {
+      kind: 'category',
+      name: 'Ristmiku mälu',
+      colour: '#5C81A6',
+      contents: [
+        {
+          kind: 'block',
+          type: 'roads_for_intersection',
+        },
+      ],
+    },
+    {
+      kind: 'category',
+      name: 'Nutikad loendid',
+      colour: '#5C81A6',
+      contents: [
+        {
+          kind: 'block',
+          type: 'starting_intesection',
+        },
+      ],
     },
   ],
 };
