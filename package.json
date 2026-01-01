@@ -1,0 +1,18 @@
+{
+  "name": "rajaplaneerija",
+  "scripts": {
+    "build:watch": "esbuild src/app.ts --bundle --outfile=dist/app.js --platform=browser --format=iife --watch",
+    "dev": "concurrently \"yarn build:watch\" \"yarn serve\""
+  },
+  "dependencies": {
+    "blockly": "^12.3.1",
+    "pixi.js": "^8.14.3",
+    "serve": "^14.2.5"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "esbuild": "^0.27.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0"
+  }
+}
