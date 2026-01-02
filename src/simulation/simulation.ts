@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import { loadMap } from "./map";
 
 const app = new PIXI.Application();
 
@@ -20,6 +21,8 @@ async function initMap(map: string, resize = 4) {
     backgroundColor: 0x2f3b45,
     antialias: true,
   });
+
+  loadMap(app, texture, container)
 }
 
 initMap("assets/map.png");
