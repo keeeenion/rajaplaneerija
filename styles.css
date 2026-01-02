@@ -89,3 +89,12 @@ body {
 .boxes {
   letter-spacing: 4px;
 }
+
+.run.active {
+  border-color: red;
+  border-width: 2px;
+}
+
+.run:hover {
+  cursor: pointer;
+}

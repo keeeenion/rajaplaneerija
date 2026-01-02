@@ -433,15 +433,59 @@ export const toolbox = {
       contents: [
         {
           kind: 'block',
-          type: 'starting_intesection',
+          type: 'start_intersection',
         },
         {
           kind: 'block',
-          type: 'finish_intesection',
+          type: 'target_intersection',
         },
         {
           kind: 'block',
-          type: 'distance_between_intersections',
+          type: 'intersection_distance',
+        },
+        {
+          kind: 'block',
+          type: 'intersection_neighbors',
+        },
+        {
+          kind: 'block',
+          type: 'intersection_name',
+        },
+        {
+          kind: 'block',
+          type: 'intersection_get_user_distance',
+        },
+        {
+          kind: 'block',
+          type: 'intersection_set_user_distance',
+        },
+        {
+          kind: 'block',
+          type: 'intersection_get_previous',
+        },
+        {
+          kind: 'block',
+          type: 'intersection_set_previous',
+        },
+        {
+          kind: 'block',
+          type: 'list_includes_node',
+        },
+        {
+          kind: 'block',
+          type: 'random_intersection_from_list',
+        },
+        {
+          kind: 'block',
+          type: 'list_minus',
+        },
+        {
+          kind: 'block',
+          type: 'min_distance_intersection',
+        },
+        {
+          kind: 'block',
+          type: 'greedy_neighbor',
         },
       ],
     },

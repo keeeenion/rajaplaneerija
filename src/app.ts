@@ -1,2 +1,2 @@
-import "./simulation";
+import "./simulation/simulation";
 import "./editor/editor";

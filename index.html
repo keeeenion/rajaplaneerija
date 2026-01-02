@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Rajaplaneerija</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div class="app">
 
@@ -30,30 +32,30 @@
         </div>
 
         <div class="sim-controls">
-          <button>Start</button>
+          <button id="start-simulation">Start</button>
           <button>Select point A</button>
           <button>Select point B</button>
           <button class="fullscreen">Fullscreen</button>
         </div>
 
         <div class="sim-runs">
-          <div class="run">
+          <div class="run" data-run="1">
             <span>simulation_runs_this_file_name_1</span>
             <span class="boxes">▢ ▢ ▢</span>
           </div>
-          <div class="run">
+          <div class="run" data-run="2">
             <span>simulation_runs_this_file_name_2</span>
             <span class="boxes">▢ ▢ ▢</span>
           </div>
-          <div class="run">
+          <div class="run" data-run="3">
             <span>simulation_runs_this_file_name_3</span>
             <span class="boxes">▢ ▢ ▢</span>
           </div>
-          <div class="run">
+          <div class="run" data-run="4">
             <span>simulation_runs_this_file_name_4</span>
             <span class="boxes">▢ ▢ ▢</span>
           </div>
-          <div class="run">
+          <div class="run" data-run="5">
             <span>simulation_runs_this_file_name_5</span>
             <span class="boxes">▢ ▢ ▢</span>
           </div>
@@ -65,4 +67,5 @@
   </div>
 </body>
 <script src="dist/app.js"></script>
+
 </html>
