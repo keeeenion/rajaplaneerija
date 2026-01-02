@@ -4,7 +4,7 @@ import { MapNode, nodeMap } from "./map_data";
 interface CarDef {
   id: string;
   color: string;
-  path: string[];
+  path: number[];
   speed: number;
   trail: CarTrail;
 }

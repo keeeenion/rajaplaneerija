@@ -1,13 +1,15 @@
+import { map_parts } from "./map_parts";
+
 export interface MapNode {
-  id: string;
+  id: number;
   x: number;
   y: number;
 }
 
 export interface MapEdge {
-  from: string;
-  to: string;
-  width?: number;
+  from: number;
+  to: number;
+  weight?: number;
 }
 
 export interface MapData {
@@ -45,79 +47,13 @@ export const mapData: MapData = {
     },
   },
 
-  nodes: [
-    {
-      id: "A1", x: 100, y: 120
-    },
-    {
-      id: "A2", x: 360, y: 120
-    },
-    {
-      id: "A3", x: 600, y: 120
-    },
-    {
-      id: "B1", x: 120, y: 300
-    },
-    {
-      id: "B2", x: 360, y: 300
-    },
-    {
-      id: "B3", x: 600, y: 300
-    },
-    {
-      id: "C1", x: 120, y: 480
-    },
-    {
-      id: "C2", x: 360, y: 480
-    },
-    {
-      id: "C3", x: 600, y: 480
-    },
-  ],
-
-  edges: [
-    {
-      from: "A1", to: "A2"
-    },
-    {
-      from: "A2", to: "A3"
-    },
-    {
-      from: "B1", to: "B2"
-    },
-    {
-      from: "B2", to: "B3"
-    },
-    {
-      from: "C1", to: "C2"
-    },
-    {
-      from: "C2", to: "C3"
-    },
-    {
-      from: "A1", to: "B1"
-    },
-    {
-      from: "A2", to: "B2"
-    },
-    {
-      from: "A3", to: "B3"
-    },
-    {
-      from: "B1", to: "C1"
-    },
-    {
-      from: "B2", to: "C2"
-    },
-    {
-      from: "B3", to: "C3"
-    },
-  ],
+  nodes: map_parts.nodes,
+  edges: map_parts.edges,
 };
 
-export const nodeMap = new Map<string, MapNode>();
-export const nodeDegree: Record<string, number> = {};
-export const adjacency: Record<string, string[]> = {};
+export const nodeMap = new Map<number, MapNode>();
+export const nodeDegree: Record<number, number> = {};
+export const adjacency: Record<number, number[]> = {};
 
 mapData.nodes.forEach(n => {
   nodeMap.set(n.id, n);

@@ -9,15 +9,13 @@ function drawBackground(app: PIXI.Application, asset: any) {
     app.stage.addChild(bg);
 }
 
-export function loadMap(app: PIXI.Application, texture: any, container: any) {
+export function loadMap(app: PIXI.Application, texture: any) {
     // animate cars
     // const cars = mapData.cars.map(c => new Car(c));
     // app.ticker.add(ticker => {
     //     const dt = ticker.elapsedMS / 10;
     //     cars.forEach(c => c.update(dt));
     // });
-
-    container.appendChild(app.canvas);
 
     // const g = new PIXI.Graphics();
     drawBackground(app, texture)

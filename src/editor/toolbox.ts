@@ -489,28 +489,6 @@ export const toolbox = {
         },
       ],
     },
-    {
-      kind: 'category',
-      name: 'Ristmiku mälu',
-      colour: '#5C81A6',
-      contents: [
-        {
-          kind: 'block',
-          type: 'roads_for_intersection',
-        },
-      ],
-    },
-    {
-      kind: 'category',
-      name: 'Nutikad loendid',
-      colour: '#5C81A6',
-      contents: [
-        {
-          kind: 'block',
-          type: 'starting_intesection',
-        },
-      ],
-    },
   ],
 };
 

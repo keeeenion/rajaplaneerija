@@ -62,7 +62,7 @@ body {
 /* Simulation controls */
 .sim-controls {
   display: grid;
-  grid-template-columns: repeat(3, auto) 1fr;
+  grid-template-columns: repeat(6, auto) 1fr;
   gap: 8px;
 }
 
