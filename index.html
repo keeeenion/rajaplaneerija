@@ -1,71 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <title>Rajaplaneerija</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-
-<body>
-  <div class="app">
-
-    <!-- Top toolbar -->
-    <header class="toolbar">
-      <button>Save</button>
-      <button>Open</button>
-      <button>New</button>
-      <button>Settings</button>
-    </header>
-
-    <!-- Main content -->
-    <main class="main">
-
-      <!-- Left side: editor -->
-      <div id="blocklyDiv"></div>
-
-      <!-- Right side: simulation -->
-      <section class="simulation-area">
-
-        <div class="simulation-map">
-          <div id="pixiContainer"></div>
-        </div>
-
-        <div class="sim-controls">
-          <button id="start-simulation">Start</button>
-          <button id="select-point-a">Select point A</button>
-          <button id="select-point-b">Select point B</button>
-          <button id="start-builder">Map builder</button>
-          <button id="export-builder">Export builder</button>
-          <button class="fullscreen">Fullscreen</button>
-        </div>
-
-        <div class="sim-runs">
-          <div class="run" data-run="1">
-            <span>simulation_runs_this_file_name_1</span>
-            <span class="boxes">▢ ▢ ▢</span>
-          </div>
-          <div class="run" data-run="2">
-            <span>simulation_runs_this_file_name_2</span>
-            <span class="boxes">▢ ▢ ▢</span>
-          </div>
-          <div class="run" data-run="3">
-            <span>simulation_runs_this_file_name_3</span>
-            <span class="boxes">▢ ▢ ▢</span>
-          </div>
-          <div class="run" data-run="4">
-            <span>simulation_runs_this_file_name_4</span>
-            <span class="boxes">▢ ▢ ▢</span>
-          </div>
-          <div class="run" data-run="5">
-            <span>simulation_runs_this_file_name_5</span>
-            <span class="boxes">▢ ▢ ▢</span>
-          </div>
-        </div>
-
-      </section>
-    </main>
-  </div>
-</body>
-<script src="dist/app.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Rajaplaneerija</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>

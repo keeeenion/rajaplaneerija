@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { MapEdge, MapNode } from "./map_data";
+import type { MapEdge, MapNode } from "./map_data";
 
 let nodes: MapNode[] = [];
 let edges: MapEdge[] = [];

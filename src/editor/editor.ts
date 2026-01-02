@@ -8,10 +8,9 @@ import toolbox from './toolbox'
 // import './blocks/roads_for_intersection';
 import './blocks';
 import { javascriptGenerator } from "blockly/javascript";
-import { getSimulationReferce, SimulationReference } from "../simulation/reference";
+import { getSimulationReferce, type SimulationReference } from "../simulation/reference";
 
 function createLeiaTeekondProcedure(workspace: Blockly.Workspace) {
-    // --- 1. Create procedure definition ---
     const def = Blockly.serialization.blocks.append(
         {
             type: 'procedures_defnoreturn',
@@ -97,19 +96,6 @@ document.querySelectorAll<HTMLElement>('.run').forEach(el => {
 });
 
 let workspace: Blockly.Workspace;
-const blocklyDiv = document.getElementById('blocklyDiv');
-if (blocklyDiv) {
-    workspace = Blockly.inject(blocklyDiv, {
-        toolbox,
-        move: {
-            drag: true,
-            scrollbars: true,
-            wheel: true
-        }
-    });
-
-    createLeiaTeekondProcedure(workspace);
-}
 
 function buildActiveWorkspace() {
     return javascriptGenerator.workspaceToCode(workspace);
@@ -136,7 +122,23 @@ function runActiveSimulation(simulation: SimulationReference) {
     runBlocklyCode(code, simulation);
 }
 
-document.getElementById('start-simulation')?.addEventListener('click', () => {
-    const simulation = getSimulationReferce();
-    runActiveSimulation(simulation);
-});
+export function initEditor() {
+    const container = document.getElementById('blocklyDiv');
+    if (!container) throw new Error("blocklyDiv not found");
+
+    workspace = Blockly.inject(container, {
+        toolbox,
+        move: {
+            drag: true,
+            scrollbars: true,
+            wheel: true
+        }
+    });
+
+    createLeiaTeekondProcedure(workspace);
+
+    document.getElementById('start-simulation')?.addEventListener('click', () => {
+        const simulation = getSimulationReferce();
+        runActiveSimulation(simulation);
+    });
+}
