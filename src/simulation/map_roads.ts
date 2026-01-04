@@ -1,13 +1,16 @@
 import * as PIXI from "pixi.js";
 import { mapData, type MapEdge, type MapNode } from "./map_data";
+import { chosenPointA, chosenPointB } from "./simulation";
+import { get } from "svelte/store";
 
 let nodes: MapNode[] = mapData.nodes;
 let edges: MapEdge[] = mapData.edges;
 
 const interactionLayer = new PIXI.Container();
 const roadsLayer = new PIXI.Graphics();
+const nodeLayer = new PIXI.Graphics();
 
-type IntersectionAction = 'pointA' | 'pointB'
+export type IntersectionAction = 'pointA' | 'pointB'
 let intersectionAction: IntersectionAction | undefined;
 
 export function setIntersectionAction(a: IntersectionAction) {
@@ -23,7 +26,17 @@ function chooseIntersection(
     if (!intersectionAction) return;
 
     // const pos = e.getLocalPosition(roadsLayer);
-    alert(node.id)
+    switch (intersectionAction) {
+        case "pointA":
+            chosenPointA.set(node.id)
+            showRoadsAndPoints();
+            break;
+        case "pointB":
+            chosenPointB.set(node.id)
+            showRoadsAndPoints();
+            break;
+    }
+
     intersectionAction = undefined;
 }
 
@@ -47,35 +60,65 @@ function drawEdges() {
     }
 }
 
-function drawNode(node: MapNode) {
-    const g = new PIXI.Graphics();
-    g.circle(0, 0, 6).fill(0xffcc00);
-    g.x = node.x;
-    g.y = node.y;
-
-    g.eventMode = "static";
-    g.cursor = "pointer";
-
-    g.on("pointerdown", e => chooseIntersection(e, node, g));
-    roadsLayer.addChild(g);
-}
-
-function redrawAll() {
-    roadsLayer.clear();
+function drawNodes(only_chosen = false) {
     for (const node of nodes) {
-        drawNode(node);
-    }
-    drawEdges();
-}
+        const g = new PIXI.Graphics();
 
-export function displayRoads(app: PIXI.Application) {
+        const A = get(chosenPointA);
+        const B = get(chosenPointB);
+        let chosen = false;
+
+        let color: PIXI.FillInput = 0xffcc00;
+        if (A === node.id) {
+            color = 0x0b42e8;
+            chosen = true;
+        }
+        if (B === node.id) {
+            color = 0x03a503;
+            chosen = true;
+        }
+
+        if (only_chosen && !chosen) continue;
+
+        g.circle(0, 0, 6).fill(color);
+        const text = new PIXI.Text(node.id.toString(), { fontSize: 10, fill: 0x000000 });
+        text.anchor.set(0.5);
+        g.addChild(text);
+        g.x = node.x;
+        g.y = node.y;
+
+        g.eventMode = "static";
+        g.cursor = "pointer";
+
+        g.on("pointerdown", e => chooseIntersection(e, node, g));
+        nodeLayer.addChild(g);
+    }
+}
+export function initRoads(app: PIXI.Application) {
     app.stage.addChild(interactionLayer);
     app.stage.addChild(roadsLayer);
+    app.stage.addChild(nodeLayer);
 
     interactionLayer.eventMode = "static";
     interactionLayer.hitArea = app.screen;
+}
 
-    redrawAll();
+export function showRoads() {
+    roadsLayer.clear();
+    drawEdges();
+}
+
+export function showIntesections() {
+    nodeLayer.clear();
+    drawNodes();
+}
+
+export function showRoadsAndPoints() {
+    roadsLayer.clear();
+    drawEdges();
+
+    nodeLayer.clear();
+    drawNodes(true);
 }
 
 export function resizeInteractionLayer(app: PIXI.Application) {

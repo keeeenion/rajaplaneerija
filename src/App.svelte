@@ -1,16 +1,24 @@
-<script>
-  import { downloadBuiltMap, stopMapBuilding } from "./simulation/map_building";
-  import { setIntersectionAction } from "./simulation/map_roads";
+<script lang="ts">
+  import { activeRunId, chooseTab, runSimulation } from "./editor/editor";
+  import { downloadBuiltMap, startMapBuilding, stopMapBuilding } from "./simulation/map_building";
+  import type { IntersectionAction } from "./simulation/map_roads";
+  import { setIntersectionAction, showIntesections } from "./simulation/map_roads";
+  import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
 
   let building = false;
 
-  function startMapBuilding() {
+  function startBuilder() {
     if (building) {
       building = false;
       return stopMapBuilding(app);
     }
     building = true;
     startMapBuilding(app);
+  }
+
+  function choosePoint(point: IntersectionAction) {
+    showIntesections();
+    setIntersectionAction(point);
   }
 </script>
 
@@ -35,21 +43,29 @@
       </div>
 
       <div class="sim-controls">
-        <button id="start-simulation">Start</button>
-        <button on:click={() => setIntersectionAction("pointA")}
-          >Select point A</button
+        <button on:click={() => runSimulation()}>Start</button>
+        <button
+          class:chosenA={!!$chosenPointA}
+          on:click={() => choosePoint("pointA")}>Select point A</button
         >
-        <button on:click={() => setIntersectionAction("pointB")}
-          >Select point B</button
+        <button
+          class:chosenB={!!$chosenPointB}
+          on:click={() => choosePoint("pointB")}>Select point B</button
         >
-        <button on:click={() => startMapBuilding()}>Map builder</button>
+        <button on:click={() => startBuilder()}>Map builder</button>
         <button on:click={() => downloadBuiltMap()}>Export builder</button>
         <button class="fullscreen">Fullscreen</button>
       </div>
 
       <div class="sim-runs">
         {#each [1, 2, 3, 4, 5] as run}
-          <div class="run" data-run={run}>
+          <!-- svelte-ignore a11y_click_events_have_key_events -->
+          <!-- svelte-ignore a11y_no_static_element_interactions -->
+          <div
+            class="run"
+            class:active={run === $activeRunId}
+            on:click={() => chooseTab(run)}
+          >
             <span>simulation_runs_this_file_name_{run}</span>
             <span class="boxes">▢ ▢ ▢</span>
           </div>
@@ -60,5 +76,11 @@
 </div>
 
 <style>
-  /* Optional: move styles.css here or keep external */
+  .chosenA {
+    background-color: #0b42e8;
+    color: white;
+  }
+  .chosenB {
+    background-color: #03a503;
+  }
 </style>

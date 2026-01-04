@@ -78,7 +78,7 @@ javascriptGenerator.forBlock[TYPE_NEIGHBORS] = (block) => {
   const node =
     javascriptGenerator.valueToCode(block, 'NODE', Order.ATOMIC) || 'null';
 
-  return [`${node}.neighbors`, Order.MEMBER];
+  return [`simulation.neighbours(${node})`, Order.MEMBER];
 };
 
 const TYPE_NAME = 'intersection_name';
@@ -336,5 +336,26 @@ javascriptGenerator.forBlock[TYPE_GREEDY] = (block) => {
     `${list}.slice().sort(${cmp})[0]`,
     Order.FUNCTION_CALL,
   ];
+};
+
+const TYPE_RETURN = 'return_path';
+
+Blockly.Blocks[TYPE_RETURN] = {
+  init: function () {
+    this.appendValueInput("PATH")
+        .setCheck("Array")
+        .appendField("tagasta lahendus");
+    this.setPreviousStatement(true);
+    this.setColour(160);
+  }
+};
+
+javascriptGenerator.forBlock[TYPE_RETURN] = function (block) {
+  const path = Blockly.JavaScript.valueToCode(
+    block,
+    'PATH',
+    Blockly.JavaScript.ORDER_NONE
+  );
+  return `return ${path};\n`;
 };
 

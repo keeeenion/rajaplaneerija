@@ -487,6 +487,10 @@ export const toolbox = {
           kind: 'block',
           type: 'greedy_neighbor',
         },
+        {
+          kind: 'block',
+          type: 'return_path',
+        },
       ],
     },
   ],

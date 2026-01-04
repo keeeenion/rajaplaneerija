@@ -52,18 +52,17 @@ export const mapData: MapData = {
 };
 
 export const nodeMap = new Map<number, MapNode>();
-export const nodeDegree: Record<number, number> = {};
 export const adjacency: Record<number, number[]> = {};
+export const weights: Record<string, number> = {};
 
 mapData.nodes.forEach(n => {
   nodeMap.set(n.id, n);
-  nodeDegree[n.id] = 0;
   adjacency[n.id] = [];
 });
 
 mapData.edges.forEach(e => {
-  nodeDegree[e.from]++;
-  nodeDegree[e.to]++;
   adjacency[e.from].push(e.to);
   adjacency[e.to].push(e.from);
+  weights[`${e.from}|${e.to}`] = e.weight || 0;
+  weights[`${e.to}|${e.from}`] = e.weight || 0;
 });

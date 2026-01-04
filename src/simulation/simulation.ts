@@ -1,8 +1,11 @@
 import * as PIXI from "pixi.js";
 import { loadMap } from "./map";
-import { displayRoads } from "./map_roads";
+import { initRoads, showIntesections, showRoadsAndPoints } from "./map_roads";
+import { writable } from "svelte/store";
 
-const app = new PIXI.Application();
+export const app = new PIXI.Application();
+export const chosenPointA = writable<number | undefined>()
+export const chosenPointB = writable<number | undefined>()
 
 export async function initSimulation(map: string, resize = 4) {
   const container = document.getElementById("pixiContainer");
@@ -25,5 +28,8 @@ export async function initSimulation(map: string, resize = 4) {
   container.appendChild(app.canvas);
 
   loadMap(app, texture)
-  displayRoads(app);
+
+  initRoads(app);
+  showRoadsAndPoints();
+  showIntesections();
 }

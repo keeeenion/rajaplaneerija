@@ -1,3 +1,7 @@
+import { get } from "svelte/store";
+import { chosenPointA } from "./simulation";
+import { adjacency, nodeMap, weights } from "./map_data";
+
 export interface Ristmik {
     id: string;
     neighbors: Ristmik[];
@@ -7,76 +11,34 @@ export interface Ristmik {
     user_previous?: Ristmik | null;
 }
 
-const A: Ristmik = { id: 'A', neighbors: [] };
-const B: Ristmik = { id: 'B', neighbors: [] };
-const C: Ristmik = { id: 'C', neighbors: [] };
-const D: Ristmik = { id: 'D', neighbors: [] };
+export class SimulationReference {
+    A: number;
+    B: number;
 
-A.neighbors = [B, C];
-B.neighbors = [A, D];
-C.neighbors = [A, D];
-D.neighbors = [B, C];
+    constructor(pointA: number, pointB: number) {
+        this.A = pointA
+        this.B = pointB
+    }
 
-const EDGE_WEIGHTS = new Map<string, number>([
-    ['A-B', 5],
-    ['B-A', 5],
+    startIntersection(): number {
+        return this.A;
+    };
 
-    ['A-C', 2],
-    ['C-A', 2],
+    targetIntersection(): number {
+        return this.B;
+    };
 
-    ['B-D', 4],
-    ['D-B', 4],
+    distanceBetween(a: number | null, b: number | null): number {
+        return weights[`${a}|${b}`] || 999999;
+    };
 
-    ['C-D', 7],
-    ['D-C', 7],
-]);
-
-export type SimulationReference = {
-    startIntersection(): Ristmik;
-    targetIntersection(): Ristmik;
-    distanceBetween(a: Ristmik | null, b: Ristmik | null): number;
-    resetUserData(): void;
-    dumpState(): void;
+    neighbours(a: number) {
+        const exists = nodeMap.get(a);
+        if (!exists) return [] // undefined maybe?
+        return adjacency[a]
+    }
 }
 
-export function getSimulationReferce(): SimulationReference {
-    return {
-        /* ---------------- Global nodes ---------------- */
-
-        startIntersection(): Ristmik {
-            return A;
-        },
-
-        targetIntersection(): Ristmik {
-            return D;
-        },
-
-        /* ---------------- Graph logic ---------------- */
-
-        distanceBetween(a: Ristmik | null, b: Ristmik | null): number {
-            if (!a || !b) return Infinity;
-
-            const key = `${a.id}-${b.id}`;
-            return EDGE_WEIGHTS.get(key) ?? Infinity;
-        },
-
-        /* ---------------- Utilities ---------------- */
-
-        resetUserData() {
-            [A, B, C, D].forEach((n) => {
-                n.user_distance = undefined;
-                n.user_previous = null;
-            });
-        },
-
-        /* ---------------- Debug helpers ---------------- */
-
-        dumpState() {
-            return [A, B, C, D].map((n) => ({
-                id: n.id,
-                distance: n.user_distance ?? Infinity,
-                previous: n.user_previous?.id ?? null,
-            }));
-        },
-    };
+export function getSimulationReferce(pointA: number, pointB: number): SimulationReference {
+    return new SimulationReference(pointA, pointB);
 }
