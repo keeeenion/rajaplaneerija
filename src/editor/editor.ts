@@ -8,38 +8,36 @@ import toolbox from './toolbox'
 // import './blocks/distance_between_intersections';
 // import './blocks/roads_for_intersection';
 import './blocks';
-import { getSimulationReferce } from "../simulation/reference";
-import { get, writable } from "svelte/store";
+import { getSimulationReferce, SimulationReference } from "../simulation/reference";
+import { get, writable, type Writable } from "svelte/store";
 import { template } from "./template";
 // import { template } from "./template_simple";
 import { app, chosenPointA, chosenPointB } from "../simulation/simulation";
-import { animateVehicle, spawnVehicle } from "../simulation/car";
+import { animateVehicle, Car, spawnVehicle } from "../simulation/car";
 import { resolvePath } from "../simulation/map";
 import { nodeMap } from "../simulation/map_data";
 import { buildActiveSimulation } from "./compiler";
 
 type Run = {
-    id: number;
-    name: string;
+    color: string;
     xml: null | string;
 }
 
-export const runs: Run[] = [
-    { id: 1, name: 'simulation_runs_this_file_name_1', xml: null },
-    { id: 2, name: 'simulation_runs_this_file_name_2', xml: null },
-    { id: 3, name: 'simulation_runs_this_file_name_3', xml: null },
-    { id: 4, name: 'simulation_runs_this_file_name_4', xml: null },
-    { id: 5, name: 'simulation_runs_this_file_name_5', xml: null },
-];
+export const runs = writable<Run[]>([
+    { color: "#ff0000", xml: null },
+])
+export const activeRunId = writable<number>(0);
 
-export const activeRunId = writable<number>(1);
+// function restoreStorage() {
+//     const xmllocalStorage.getItem("xmls")
+// }
 
 export function saveWorkspaceToXml() {
     const dom = Blockly.Xml.workspaceToDom(workspace);
     return Blockly.Xml.domToPrettyText(dom);
 }
 
-function loadWorkspaceFromXml(xmlText: string | null) {
+export function loadWorkspaceFromXml(xmlText: string | null) {
     workspace.clear();
     if (!xmlText) return;
     const dom = Blockly.utils.xml.textToDom(xmlText);
@@ -48,14 +46,14 @@ function loadWorkspaceFromXml(xmlText: string | null) {
 
 export function chooseTab(newRunId: number) {
     const active = get(activeRunId);
-    const currentRun = runs.find(r => r.id === active);
+    const currentRun = get(runs)[active];
     if (currentRun) {
         currentRun.xml = saveWorkspaceToXml();
     }
 
     activeRunId.set(newRunId);
 
-    const nextRun = runs.find(r => r.id === newRunId);
+    const nextRun = get(runs)[newRunId];
     if (nextRun && nextRun.xml) {
         loadWorkspaceFromXml(nextRun.xml);
     } else if (nextRun && !nextRun.xml) {
@@ -65,16 +63,13 @@ export function chooseTab(newRunId: number) {
 
 export let workspace: Blockly.Workspace;
 
-export function runSimulation() {
-    const A = get(chosenPointA)
-    const B = get(chosenPointB)
+type PreparedSim = {
+    vehicle: Car;
+    simulation: SimulationReference;
+    error?: string;
+}
 
-    if (!B || !A) {
-        alert("Vali algus ja lõpp punktid")
-        console.error("dont have A or B points");
-        return;
-    }
-
+function prepareSimulation(A: number, B: number): PreparedSim {
     // reference to the simulation
     const simulation = getSimulationReferce(A, B);
 
@@ -91,11 +86,45 @@ export function runSimulation() {
     const valid = resolvePath([A, ...path]);
     if (!valid) {
         console.error("path is invalid")
-        return
+        return {vehicle, simulation, error: "Teekond on auklik"}
     }
 
     vehicle.assignPath(valid);
+
+    return {vehicle, simulation};
+}
+
+export function runSimulation() {
+    const A = get(chosenPointA)
+    const B = get(chosenPointB)
+
+    if (!B || !A) {
+        alert("Vali algus ja lõpp punktid")
+        console.error("dont have A or B points");
+        return;
+    }
+
+    const res = prepareSimulation(A, B);
+    if (!res) return;
+    const {vehicle} = res;
+
     animateVehicle(app, vehicle)
+}
+
+export function runAllSimulations() {
+    const A = get(chosenPointA)
+    const B = get(chosenPointB)
+
+    if (!B || !A) {
+        alert("Vali algus ja lõpp punktid")
+        console.error("dont have A or B points");
+        return;
+    }
+
+    const sims = get(runs)
+        .map(r => prepareSimulation(A, B))
+        .filter(s => !s.error)
+        .map(s => animateVehicle(app, s.vehicle))
 }
 
 export function initEditor() {

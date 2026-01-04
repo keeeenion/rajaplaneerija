@@ -84,7 +84,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 2px solid #000;
+  border-radius: 5px;
   padding: 6px 8px;
   background: #fff;
 }
@@ -94,7 +94,7 @@ header {
 }
 
 .run.active {
-  border-color: red;
+  border: 1px solid #07e9a56d;
   border-width: 2px;
 }
 

@@ -1,20 +1,11 @@
 export const template = `
 <xml xmlns="https://developers.google.com/blockly/xml">
   <variables>
-    <variable id="]Y{*%Fxe|)K|(2}sb.:7">algpunkt</variable>
-    <variable id="/mc5YD*6TcY,H$(m,fBE">sihtpunkt</variable>
-    <variable id="fixf:s~BAj3V#xIh@?C7">loendis</variable>
-    <variable id="M2)aLTv3Sz3pw8v/?.$a">ristmik</variable>
-    <variable id="h*51}YPa[U}@]4.INZ!Q">loendist</variable>
     <variable id="bbB}|mrA0q51:KX%NAuy">teekond</variable>
     <variable id="!C2I!mdz!CJ1JOUk8|,,">uuritav ristmik</variable>
     <variable id="]J8J+XtP_(7NQBawzX;M">naabrid</variable>
   </variables>
-  <block type="procedures_defreturn" id="sB3DAe@{K~dDeNXvpS_}" x="338" y="-12">
-    <mutation>
-      <arg name="algpunkt" varid="]Y{*%Fxe|)K|(2}sb.:7"></arg>
-      <arg name="sihtpunkt" varid="/mc5YD*6TcY,H$(m,fBE"></arg>
-    </mutation>
+  <block type="procedures_defreturn" id="sB3DAe@{K~dDeNXvpS_}" x="338" y="-12" editable="false" deletable="false">
     <field name="NAME">leia teekond</field>
     <comment pinned="false" h="80" w="160">Funktsiooni kirjeldus ...</comment>
     <statement name="STACK">
@@ -135,7 +126,7 @@ export const template = `
       </block>
     </statement>
     <value name="RETURN">
-      <block type="variables_get" id="R^oLA|pg##GE}E#.sfwD">
+      <block deletable="false" type="variables_get" id="R^oLA|pg##GE}E#.sfwD">
         <field name="VAR" id="bbB}|mrA0q51:KX%NAuy">teekond</field>
       </block>
     </value>
