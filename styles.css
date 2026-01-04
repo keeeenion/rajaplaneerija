@@ -60,7 +60,7 @@ header {
 .simulation-map {
   border: 2px solid #000;
   background: #fff;
-  padding: 12px;
+  /* padding: 12px; */
 }
 
 /* Simulation controls */

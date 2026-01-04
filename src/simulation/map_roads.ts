@@ -29,11 +29,11 @@ function chooseIntersection(
     switch (intersectionAction) {
         case "pointA":
             chosenPointA.set(node.id)
-            showIntesections();
+            showIntersections();
             break;
         case "pointB":
             chosenPointB.set(node.id)
-            showIntesections();
+            showIntersections();
             break;
     }
 
@@ -51,13 +51,14 @@ function drawEdges() {
         if (!from || !to) continue;
 
         // const opacity = ((edge.weight - 1) / (10 - 1)) * 100
-        const alpha =  (edge.weight - 1) / 9;
+        let alpha =  (edge.weight - 1) / 9;
+        // if (alpha < 0.65) alpha = 0;
 
         roadsLayer
             .moveTo(from.x, from.y)
             .lineTo(to.x, to.y)
             .stroke({
-                width: 3,
+                width: 5,
                 color: 0xff0000,
                 alpha,
             });
@@ -115,7 +116,7 @@ export function showRoads() {
     drawEdges();
 }
 
-export function showIntesections(debug = false) {
+export function showIntersections(debug = false) {
     nodeLayer.clear();
     drawNodes(debug);
 }

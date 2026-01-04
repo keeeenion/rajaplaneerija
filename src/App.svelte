@@ -16,9 +16,9 @@
   import type { IntersectionAction } from "./simulation/map_roads";
   import {
     setIntersectionAction,
-    showIntesections,
+    showIntersections,
   } from "./simulation/map_roads";
-  import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
+  import { app, chosenPointA, chosenPointB, fullscreen } from "./simulation/simulation";
 
   let building = false;
 
@@ -32,7 +32,7 @@
   }
 
   function choosePoint(point: IntersectionAction) {
-    showIntesections();
+    showIntersections();
     setIntersectionAction(point);
   }
 
@@ -59,10 +59,8 @@
   }
 
   async function handleFiles(event: Event) {
-    console.log(forTab);
     const target = event.target as HTMLInputElement;
     const files = target.files
-    console.log(files)
     if (files?.length && files?.length >= 1 && forTab != undefined) {
       const f = files[0];
       chooseTab(forTab)
@@ -74,6 +72,8 @@
   function downloadTab(idx: number) {
     const name = prompt("Meeskonna nimi:");
     if (!name) return;
+
+    // todo: make sure to save current
 
     const r = get(runs);
     console.log(r[idx].xml)
@@ -116,7 +116,7 @@
         >
         <!-- <button on:click={() => startBuilder()}>Map builder</button>
         <button on:click={() => downloadBuiltMap()}>Export builder</button> -->
-        <!-- <button class="fullscreen">Fullscreen</button> -->
+        <!-- <button class="fullscreen" on:click={() => fullscreen()} >Fullscreen</button> -->
       </div>
 
       <div class="sim-runs">
@@ -130,6 +130,17 @@
           >
             <span>Katse {idx}</span>
             <span class="boxes">
+              <input
+                type="color"
+                value={run.color}
+                on:change={(e) => {
+                  runs.update((r) => {
+                    r[idx].color = e.currentTarget.value;
+                    return r;
+                  });
+                }}
+              />
+
               <button on:click={() => openFileBrowser(idx)}>Loe fail</button>
               <input
                 type="file"

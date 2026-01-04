@@ -16,7 +16,7 @@ import { app, chosenPointA, chosenPointB } from "../simulation/simulation";
 import { animateVehicle, Car, spawnVehicle } from "../simulation/car";
 import { resolvePath } from "../simulation/map";
 import { nodeMap } from "../simulation/map_data";
-import { buildActiveSimulation } from "./compiler";
+import { buildSimulation } from "./compiler";
 
 type Run = {
     color: string;
@@ -69,19 +69,20 @@ type PreparedSim = {
     error?: string;
 }
 
-function prepareSimulation(A: number, B: number): PreparedSim {
+function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
     // reference to the simulation
     const simulation = getSimulationReferce(A, B);
 
     // todo: add one car to the screen and make it think
+    const run = get(runs)[idx]
     const vehicle = spawnVehicle(app, {
-        color: "#cc1212",
+        color: run.color,
         start: nodeMap.get(8)!,
     });
     // vehicle.thinking();
 
     // run user code for it to derive the path to take
-    let path = buildActiveSimulation(simulation);
+    let path = buildSimulation(idx, simulation);
 
     const valid = resolvePath([A, ...path]);
     if (!valid) {
@@ -104,7 +105,8 @@ export function runSimulation() {
         return;
     }
 
-    const res = prepareSimulation(A, B);
+    const active = get(activeRunId);
+    const res = prepareSimulation(active, A, B);
     if (!res) return;
     const {vehicle} = res;
 
@@ -122,7 +124,7 @@ export function runAllSimulations() {
     }
 
     const sims = get(runs)
-        .map(r => prepareSimulation(A, B))
+        .map((r, idx) => prepareSimulation(idx, A, B))
         .filter(s => !s.error)
         .map(s => animateVehicle(app, s.vehicle))
 }

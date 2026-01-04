@@ -1,14 +1,28 @@
+import * as Blockly from "blockly";
 import { javascriptGenerator } from "blockly/javascript";
 import type { SimulationReference } from "../simulation/reference";
-import { activeRunId, runs, saveWorkspaceToXml, workspace } from "./editor";
+import { runs, saveWorkspaceToXml } from "./editor";
 import { get } from "svelte/store";
-import { example_code } from "./code_example";
 import { error } from "../store";
 
-function buildActiveWorkspace() {
-    return javascriptGenerator.workspaceToCode(workspace);
-}
+function buildCode(xmlText: string) {
+     // Create a headless workspace
+    const headlessWorkspace = new Blockly.Workspace();
 
+    // Parse the XML string
+    const xml = Blockly.utils.xml.textToDom(xmlText);
+
+    // Load XML into workspace
+    Blockly.Xml.domToWorkspace(xml, headlessWorkspace);
+
+    // Generate JS
+    const code = javascriptGenerator.workspaceToCode(headlessWorkspace);
+
+    // Clean up workspace
+    headlessWorkspace.dispose();
+
+    return code;
+}
 
 function runBlocklyCode(code: string, simulation: SimulationReference) {
     const fn = new Function(
@@ -20,15 +34,14 @@ function runBlocklyCode(code: string, simulation: SimulationReference) {
     return fn(simulation);
 }
 
-export function buildActiveSimulation(simulation: SimulationReference) {
-    const run = runs.find(r => r.id === get(activeRunId));
+export function buildSimulation(idx: number, simulation: SimulationReference) {
+    const run = get(runs).find((r, i) => i === idx);
     if (!run) return;
     run.xml = saveWorkspaceToXml();
-    console.log(run.xml)
 
     let code;
     try {
-        code = buildActiveWorkspace();
+        code = buildCode(run.xml);
     } catch (err: any) {
         console.error(err)
         error.set(err.message)

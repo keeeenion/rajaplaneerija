@@ -17,7 +17,6 @@ function deriveSpeed(weight: number) {
 
   // linear interpolation
   const speed = minSpeed + ((weight - minWeight) / (maxWeight - minWeight)) * (maxSpeed - minSpeed);
-  console.log("speed", speed)
 
   return speed;
 }
@@ -74,9 +73,7 @@ export class Car {
     const b = this.path[this.segment + 1];
     if (!b) return;
 
-    console.log(weights)
     const weight = weights[`${a.id}|${b.id}`];
-    console.log(weight, a, b)
     this.t += deriveSpeed(weight) * dt * 0.01;
 
     const x = a.x + (b.x - a.x) * this.t;

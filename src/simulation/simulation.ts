@@ -1,11 +1,11 @@
 import * as PIXI from "pixi.js";
 import { loadMap } from "./map";
-import { initRoads, showIntesections, showRoads, showRoadsAndPoints } from "./map_roads";
+import { initRoads, showIntersections, showRoads, showRoadsAndPoints } from "./map_roads";
 import { writable } from "svelte/store";
 
 export const app = new PIXI.Application();
-export const chosenPointA = writable<number | undefined>()
-export const chosenPointB = writable<number | undefined>()
+export const chosenPointA = writable<number | undefined>(8)
+export const chosenPointB = writable<number | undefined>(33)
 
 export async function initSimulation(map: string, resize = 4) {
   const container = document.getElementById("pixiContainer");
@@ -26,10 +26,21 @@ export async function initSimulation(map: string, resize = 4) {
     antialias: true,
   });
   container.appendChild(app.canvas);
+  
 
   loadMap(app, texture)
 
   initRoads(app);
-  showIntesections(true);
+  // showIntersections(true);
   showRoads();
 }
+
+export function fullscreen() {
+  const container = document.getElementById("pixiContainer");
+  container?.requestFullscreen()
+  // app.renderer.resize(window.width, window.innerHeight);
+  // Optional: scale your stage if needed
+  // app.stage.scale.x = window.innerWidth / 800;
+  // app.stage.scale.y = window.innerHeight / 600;
+}
+
