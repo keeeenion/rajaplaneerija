@@ -23,16 +23,9 @@
 </script>
 
 <div class="app">
-  <!-- Top toolbar -->
-  <header class="toolbar">
-    <button>Save</button>
-    <button>Open</button>
-    <button>New</button>
-    <button>Settings</button>
-  </header>
-
   <!-- Main content -->
   <main class="main">
+
     <!-- Left side: editor -->
     <div id="blocklyDiv"></div>
 
@@ -43,18 +36,18 @@
       </div>
 
       <div class="sim-controls">
-        <button on:click={() => runSimulation()}>Start</button>
+        <button on:click={() => runSimulation()}>Jooksuta</button>
         <button
           class:chosenA={!!$chosenPointA}
-          on:click={() => choosePoint("pointA")}>Select point A</button
+          on:click={() => choosePoint("pointA")}>Vali alguspunk</button
         >
         <button
           class:chosenB={!!$chosenPointB}
-          on:click={() => choosePoint("pointB")}>Select point B</button
+          on:click={() => choosePoint("pointB")}>Vali sihtpunkt</button
         >
-        <button on:click={() => startBuilder()}>Map builder</button>
-        <button on:click={() => downloadBuiltMap()}>Export builder</button>
-        <button class="fullscreen">Fullscreen</button>
+        <!-- <button on:click={() => startBuilder()}>Map builder</button>
+        <button on:click={() => downloadBuiltMap()}>Export builder</button> -->
+        <!-- <button class="fullscreen">Fullscreen</button> -->
       </div>
 
       <div class="sim-runs">

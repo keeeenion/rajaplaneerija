@@ -8,6 +8,7 @@ export const template = `
     id="$9_L!E-5@|ihY_cycGke"
     x="338"
     y="-12"
+    editable="false"
     deletable="false">
     <field name="NAME">leia teekond</field>
     <comment pinned="false" h="80" w="160">

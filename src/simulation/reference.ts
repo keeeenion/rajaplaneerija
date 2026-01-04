@@ -1,5 +1,3 @@
-import { get } from "svelte/store";
-import { chosenPointA } from "./simulation";
 import { adjacency, nodeMap, weights } from "./map_data";
 
 export interface Ristmik {
@@ -36,7 +34,20 @@ export class SimulationReference {
         const exists = nodeMap.get(a);
         if (!exists) return [] // undefined maybe?
         return adjacency[a]
-    }
+    };
+
+    randomNeighbour(list: any[]) {
+        const r = (a: number, b: number) => {
+            if (a > b) {
+                // Swap a and b to ensure a is smaller.
+                var c = a;
+                a = b;
+                b = c;
+            }
+            return Math.floor(Math.random() * (b - a + 1) + a);
+        }
+        return list[(r(1, list.length) - 1)]
+    };
 }
 
 export function getSimulationReferce(pointA: number, pointB: number): SimulationReference {

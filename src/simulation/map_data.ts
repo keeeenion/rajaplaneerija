@@ -9,7 +9,7 @@ export interface MapNode {
 export interface MapEdge {
   from: number;
   to: number;
-  weight?: number;
+  weight: number;
 }
 
 export interface MapData {
@@ -63,6 +63,6 @@ mapData.nodes.forEach(n => {
 mapData.edges.forEach(e => {
   adjacency[e.from].push(e.to);
   adjacency[e.to].push(e.from);
-  weights[`${e.from}|${e.to}`] = e.weight || 0;
-  weights[`${e.to}|${e.from}`] = e.weight || 0;
+  weights[`${e.from}|${e.to}`] = e.weight;
+  weights[`${e.to}|${e.from}`] = e.weight;
 });

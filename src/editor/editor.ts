@@ -10,7 +10,8 @@ import toolbox from './toolbox'
 import './blocks';
 import { getSimulationReferce } from "../simulation/reference";
 import { get, writable } from "svelte/store";
-import { template } from "./template_simple";
+import { template } from "./template";
+// import { template } from "./template_simple";
 import { app, chosenPointA, chosenPointB } from "../simulation/simulation";
 import { animateVehicle, spawnVehicle } from "../simulation/car";
 import { resolvePath } from "../simulation/map";
@@ -69,6 +70,7 @@ export function runSimulation() {
     const B = get(chosenPointB)
 
     if (!B || !A) {
+        alert("Vali algus ja lõpp punktid")
         console.error("dont have A or B points");
         return;
     }
@@ -79,7 +81,6 @@ export function runSimulation() {
     // todo: add one car to the screen and make it think
     const vehicle = spawnVehicle(app, {
         color: "#cc1212",
-        speed: 1.0,
         start: nodeMap.get(8)!,
     });
     // vehicle.thinking();
@@ -87,8 +88,7 @@ export function runSimulation() {
     // run user code for it to derive the path to take
     let path = buildActiveSimulation(simulation);
 
-    path = [8, 5, 4, 3, 12];
-    const valid = resolvePath(path);
+    const valid = resolvePath([A, ...path]);
     if (!valid) {
         console.error("path is invalid")
         return

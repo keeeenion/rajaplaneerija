@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { loadMap } from "./map";
-import { initRoads, showIntesections, showRoadsAndPoints } from "./map_roads";
+import { initRoads, showIntesections, showRoads, showRoadsAndPoints } from "./map_roads";
 import { writable } from "svelte/store";
 
 export const app = new PIXI.Application();
@@ -30,6 +30,6 @@ export async function initSimulation(map: string, resize = 4) {
   loadMap(app, texture)
 
   initRoads(app);
-  showRoadsAndPoints();
-  showIntesections();
+  showIntesections(true);
+  showRoads();
 }

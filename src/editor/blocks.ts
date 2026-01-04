@@ -40,11 +40,11 @@ Blockly.Blocks[TYPE_DISTANCE] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Ristmik')
-      .appendField('Ristmik A');
+      .appendField('Ristmiku A');
 
     this.appendValueInput('B')
       .setCheck('Ristmik')
-      .appendField('Ristmik B');
+      .appendField('kaugus ristmikust B');
 
     this.setOutput(true, 'Number');
     this.setColour(210);
@@ -101,136 +101,13 @@ javascriptGenerator.forBlock[TYPE_NAME] = (block) => {
   return [`${node}.id`, Order.MEMBER];
 };
 
-const TYPE_GET_DISTANCE = 'intersection_get_user_distance';
-
-Blockly.Blocks[TYPE_GET_DISTANCE] = {
-  init() {
-    this.appendValueInput('NODE')
-      .setCheck('Ristmik')
-      .appendField('Küsi ristmiku kaugust algusest');
-
-    this.setOutput(true, 'Number');
-    this.setColour(180);
-  },
-};
-
-javascriptGenerator.forBlock[TYPE_GET_DISTANCE] = (block) => {
-  const node =
-    javascriptGenerator.valueToCode(block, 'NODE', Order.ATOMIC) || 'null';
-
-  return [
-    `(${node}.user_distance ?? Infinity)`,
-    Order.LOGICAL_OR,
-  ];
-};
-
-const TYPE_SET_DISTANCE = 'intersection_set_user_distance';
-
-Blockly.Blocks[TYPE_SET_DISTANCE] = {
-  init() {
-    this.appendValueInput('NODE')
-      .setCheck('Ristmik')
-      .appendField('Määra ristmiku kaugus');
-
-    this.appendValueInput('DIST')
-      .setCheck('Number')
-      .appendField('väärtuseks');
-
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setColour(20);
-  },
-};
-
-javascriptGenerator.forBlock[TYPE_SET_DISTANCE] = (block) => {
-  const node =
-    javascriptGenerator.valueToCode(block, 'NODE', Order.ATOMIC) || 'null';
-  const dist =
-    javascriptGenerator.valueToCode(block, 'DIST', Order.ATOMIC) || '0';
-
-  return `${node}.user_distance = ${dist};\n`;
-};
-
-const TYPE_GET_PREVIOUS = 'intersection_get_previous';
-
-Blockly.Blocks[TYPE_GET_PREVIOUS] = {
-  init() {
-    this.appendValueInput('NODE')
-      .setCheck('Ristmik')
-      .appendField('Küsi eelmist ristmikku');
-
-    this.setOutput(true, 'Ristmik');
-    this.setColour(180);
-  },
-};
-
-javascriptGenerator.forBlock[TYPE_GET_PREVIOUS] = (block) => {
-  const node =
-    javascriptGenerator.valueToCode(block, 'NODE', Order.ATOMIC) || 'null';
-
-  return [`${node}.user_previous ?? null`, Order.LOGICAL_OR];
-};
-
-const TYPE_SET_PREVIOUS = 'intersection_set_previous';
-
-Blockly.Blocks[TYPE_SET_PREVIOUS] = {
-  init() {
-    this.appendValueInput('NODE')
-      .setCheck('Ristmik')
-      .appendField('Määra eelmine ristmik');
-
-    this.appendValueInput('PREV')
-      .setCheck('Ristmik')
-      .appendField('on');
-
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-    this.setColour(20);
-  },
-};
-
-javascriptGenerator.forBlock[TYPE_SET_PREVIOUS] = (block) => {
-  const node =
-    javascriptGenerator.valueToCode(block, 'NODE', Order.ATOMIC) || 'null';
-  const prev =
-    javascriptGenerator.valueToCode(block, 'PREV', Order.ATOMIC) || 'null';
-
-  return `${node}.user_previous = ${prev};\n`;
-};
-
-const TYPE_INCLUDES = 'list_includes_node';
-
-Blockly.Blocks[TYPE_INCLUDES] = {
-  init() {
-    this.appendValueInput('LIST')
-      .setCheck('Array')
-      .appendField('Sisaldub loendis');
-
-    this.appendValueInput('ITEM')
-      .setCheck('Ristmik')
-      .appendField('?');
-
-    this.setOutput(true, 'Boolean');
-    this.setColour(260);
-  },
-};
-
-javascriptGenerator.forBlock[TYPE_INCLUDES] = (block) => {
-  const list =
-    javascriptGenerator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
-  const item =
-    javascriptGenerator.valueToCode(block, 'ITEM', Order.ATOMIC) || 'null';
-
-  return [`${list}.includes(${item})`, Order.FUNCTION_CALL];
-};
-
 const TYPE_RANDOM_FROM_LIST = 'random_intersection_from_list';
 
 Blockly.Blocks[TYPE_RANDOM_FROM_LIST] = {
   init() {
     this.appendValueInput('LIST')
       .setCheck('Array')
-      .appendField('Vali juhuslik ristmik');
+      .appendField('Vali juhuslik ristmik naabritest');
 
     this.setOutput(true, 'Ristmik');
     this.setColour(260);
@@ -242,7 +119,7 @@ javascriptGenerator.forBlock[TYPE_RANDOM_FROM_LIST] = (block) => {
     javascriptGenerator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
 
   return [
-    `${list}[Math.floor(Math.random() * ${list}.length)]`,
+    `simulation.randomNeighbour(${list})`,
     Order.MEMBER,
   ];
 };
@@ -337,25 +214,3 @@ javascriptGenerator.forBlock[TYPE_GREEDY] = (block) => {
     Order.FUNCTION_CALL,
   ];
 };
-
-const TYPE_RETURN = 'return_path';
-
-Blockly.Blocks[TYPE_RETURN] = {
-  init: function () {
-    this.appendValueInput("PATH")
-        .setCheck("Array")
-        .appendField("tagasta lahendus");
-    this.setPreviousStatement(true);
-    this.setColour(160);
-  }
-};
-
-javascriptGenerator.forBlock[TYPE_RETURN] = function (block) {
-  const path = Blockly.JavaScript.valueToCode(
-    block,
-    'PATH',
-    Blockly.JavaScript.ORDER_NONE
-  );
-  return `return ${path};\n`;
-};
-

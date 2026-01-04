@@ -428,7 +428,7 @@ export const toolbox = {
     },
     {
       kind: 'category',
-      name: 'Maailma konstant',
+      name: 'Simulatsioon',
       colour: '#5C81A6',
       contents: [
         {
@@ -453,26 +453,6 @@ export const toolbox = {
         },
         {
           kind: 'block',
-          type: 'intersection_get_user_distance',
-        },
-        {
-          kind: 'block',
-          type: 'intersection_set_user_distance',
-        },
-        {
-          kind: 'block',
-          type: 'intersection_get_previous',
-        },
-        {
-          kind: 'block',
-          type: 'intersection_set_previous',
-        },
-        {
-          kind: 'block',
-          type: 'list_includes_node',
-        },
-        {
-          kind: 'block',
           type: 'random_intersection_from_list',
         },
         {
@@ -486,11 +466,7 @@ export const toolbox = {
         {
           kind: 'block',
           type: 'greedy_neighbor',
-        },
-        {
-          kind: 'block',
-          type: 'return_path',
-        },
+        }
       ],
     },
   ],

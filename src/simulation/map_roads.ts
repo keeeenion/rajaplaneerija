@@ -29,11 +29,11 @@ function chooseIntersection(
     switch (intersectionAction) {
         case "pointA":
             chosenPointA.set(node.id)
-            showRoadsAndPoints();
+            showIntesections();
             break;
         case "pointB":
             chosenPointB.set(node.id)
-            showRoadsAndPoints();
+            showIntesections();
             break;
     }
 
@@ -50,17 +50,21 @@ function drawEdges() {
         const to = getNode(edge.to);
         if (!from || !to) continue;
 
+        // const opacity = ((edge.weight - 1) / (10 - 1)) * 100
+        const alpha =  (edge.weight - 1) / 9;
+
         roadsLayer
             .moveTo(from.x, from.y)
             .lineTo(to.x, to.y)
             .stroke({
                 width: 3,
-                color: 0xffffff,
+                color: 0xff0000,
+                alpha,
             });
     }
 }
 
-function drawNodes(only_chosen = false) {
+function drawNodes(text = false, only_chosen = false) {
     for (const node of nodes) {
         const g = new PIXI.Graphics();
 
@@ -81,11 +85,14 @@ function drawNodes(only_chosen = false) {
         if (only_chosen && !chosen) continue;
 
         g.circle(0, 0, 6).fill(color);
-        const text = new PIXI.Text(node.id.toString(), { fontSize: 10, fill: 0x000000 });
-        text.anchor.set(0.5);
-        g.addChild(text);
         g.x = node.x;
         g.y = node.y;
+
+        if (text) {
+            const t = new PIXI.Text(node.id.toString(), { fontSize: 10, fill: 0x000000 });
+            t.anchor.set(0.5);
+            g.addChild(t);
+        }
 
         g.eventMode = "static";
         g.cursor = "pointer";
@@ -108,9 +115,9 @@ export function showRoads() {
     drawEdges();
 }
 
-export function showIntesections() {
+export function showIntesections(debug = false) {
     nodeLayer.clear();
-    drawNodes();
+    drawNodes(debug);
 }
 
 export function showRoadsAndPoints() {
@@ -118,7 +125,7 @@ export function showRoadsAndPoints() {
     drawEdges();
 
     nodeLayer.clear();
-    drawNodes(true);
+    drawNodes();
 }
 
 export function resizeInteractionLayer(app: PIXI.Application) {

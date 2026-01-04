@@ -1,15 +1,29 @@
 import * as PIXI from "pixi.js";
-import { type MapNode } from "./map_data";
+import { weights, type MapNode } from "./map_data";
 
 interface CarDef {
   color: string;
-  speed: number;
   start: MapNode;
+}
+
+function deriveSpeed(weight: number) {
+  const minWeight = 1;
+  const maxWeight = 10;
+  const minSpeed = 1.7;
+  const maxSpeed = 0.5;
+
+  // clamp weight to valid range
+  weight = Math.max(minWeight, Math.min(maxWeight, weight));
+
+  // linear interpolation
+  const speed = minSpeed + ((weight - minWeight) / (maxWeight - minWeight)) * (maxSpeed - minSpeed);
+  console.log("speed", speed)
+
+  return speed;
 }
 
 export class Car {
   private path?: MapNode[];
-  private speed: number;
   private segment = 0;
   private t = 0;
 
@@ -17,9 +31,6 @@ export class Car {
   private trail: PIXI.Graphics;
 
   constructor(app: PIXI.Application, def: CarDef) {
-    // this.path = def.path.map(id => nodeMap.get(id)!);
-    this.speed = def.speed;
-
     this.trail = new PIXI.Graphics();
     app.stage.addChild(this.trail);
 
@@ -47,22 +58,26 @@ export class Car {
   }
 
   update(dt: number) {
-    if(!this.path) return;
+    if (!this.path) return;
 
     if (this.t >= 1) {
       this.t = 0;
       this.segment++;
 
-      if (this.segment >= this.path.length - 1) {
-        this.segment = 0;
-      }
+      // restart path
+      // if (this.segment >= this.path.length - 1) {
+      //   this.segment = 0;
+      // }
     }
 
     const a = this.path[this.segment];
     const b = this.path[this.segment + 1];
     if (!b) return;
 
-    this.t += this.speed * dt * 0.01;
+    console.log(weights)
+    const weight = weights[`${a.id}|${b.id}`];
+    console.log(weight, a, b)
+    this.t += deriveSpeed(weight) * dt * 0.01;
 
     const x = a.x + (b.x - a.x) * this.t;
     const y = a.y + (b.y - a.y) * this.t;
@@ -79,7 +94,7 @@ export function spawnVehicle(app: PIXI.Application, options: CarDef) {
 
 export function animateVehicle(app: PIXI.Application, vehicle: Car) {
   app.ticker.add(ticker => {
-      const dt = ticker.elapsedMS / 10;
-      vehicle.update(dt)
+    const dt = ticker.elapsedMS / 10;
+    vehicle.update(dt)
   });
 } 
