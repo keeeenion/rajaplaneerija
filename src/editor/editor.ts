@@ -95,7 +95,7 @@ function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
 
     const valid = resolvePath([A, ...path]);
     if (!valid || !valid.length) {
-        console.error("path is invalid")
+        console.error("Teekond on auklik")
         return { vehicle, simulation, error: "Teekond on auklik" }
     }
 
@@ -120,7 +120,13 @@ export function runSimulation() {
     const active = get(activeRunId);
     const res = prepareSimulation(active, A, B);
     if (!res) return;
-    const { vehicle } = res;
+    const { vehicle, error } = res;
+
+    if (error) {
+        alert(error)
+        console.error(error);
+        return
+    }
 
     animateVehicle(app, vehicle)
 }
