@@ -31,7 +31,7 @@ export function buildSimulation(idx: number, simulation: SimulationReference): {
     if (idx == get(activeRunId)) run.xml = saveWorkspaceToXml();
     if (!run.xml) return;
 
-    const timer = new Stopwatch();
+    // const timer = new Stopwatch();
 
     let code;
     try {
@@ -43,7 +43,9 @@ export function buildSimulation(idx: number, simulation: SimulationReference): {
         return;
     }
 
-    console.log(code)
+    const timer = new Stopwatch();
+
+    // console.log(code)
 
     let list;
     try {
@@ -56,6 +58,7 @@ export function buildSimulation(idx: number, simulation: SimulationReference): {
     }
 
     const taken = timer.stop();
+    console.log("taken", idx, taken)
     
     if (!list) {
         const err = "Tagastatud list on tühi või olematu"

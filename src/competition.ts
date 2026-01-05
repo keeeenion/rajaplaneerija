@@ -1,33 +1,16 @@
 import { get, writable } from "svelte/store";
-import { runs, type PreparedSim, type Run } from "./editor/editor";
+import { runs, type Run } from "./editor/editor";
 import { prepareStage } from "./simulation/map_data";
-import { showOnlyRoads, showOnlyRoadsAndChosenPoints } from "./simulation/map_roads";
-import { competing } from "./store";
+import { showOnlyRoadsAndChosenPoints } from "./simulation/map_roads";
 import { app } from "./simulation/simulation";
 import { playCountdown } from "./simulation/countdown";
 import { runCompetition } from "./runner";
+import { addStopwatch, type StopwatchActions } from "./timer";
 
-type Timer = {
-    name: string
-    color: string
-    timer_s: number
-}
-
-export const timers = writable<Timer[]>([
-    { name: "Roosmarii", color: "#d612b5ff", timer_s: 0 },
-    { name: "Madis", color: "#18d47cff", timer_s: 0},
-    { name: "Timofey", color: "#1020adff", timer_s: 0 },
-    { name: "Kristjan", color: "#7b0e0eff", timer_s: 0 },
-    { name: "Armin", color: "#9a0997ff", timer_s: 0 }
-])
-
-export async function playStage(stage: number, competitors: Run[]) {
+export async function playStage(stage: number, competitors: Competitor[]) {
     // prepare map and roads
     const [A, B] = prepareStage(stage);
     showOnlyRoadsAndChosenPoints([A, B]);
-
-    // play countdown
-    await playCountdown(app)
 
     await runCompetition(A, B, competitors);
     // animate car thinking animations
@@ -41,16 +24,30 @@ export async function playStage(stage: number, competitors: Run[]) {
     // return times
 }
 
-export async function startCompetition() {
-    competing.set(true)
+export type Competitor = {
+    stopwatch: StopwatchActions,
+    idx: number,
+    run: Run,
+}
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
+export async function startCompetition() {
+    const r = get(runs)
+
+    const competitors: Competitor[] = r.map((c, idx) => ({
+        stopwatch: addStopwatch(String(idx)),
+        idx,
+        run: r[idx],
+    }))
+
+    const [A, B] = prepareStage(1);
+    showOnlyRoadsAndChosenPoints([A, B]);
+
+    // play countdown
+    await playCountdown(app)
 
     // list of maps
     const stages: number[] = [1, 2, 3, 4, 5];
     const leaderboard = {}
-
-    const competitors = get(runs)
 
     for (const stage of stages) {
         console.log("starting stage", stage)
@@ -61,5 +58,4 @@ export async function startCompetition() {
 
     // create a popup of leaderboard
     console.log("game over")
-    competing.set(false)
 }

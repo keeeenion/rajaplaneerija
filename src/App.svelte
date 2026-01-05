@@ -16,9 +16,11 @@
   import type { IntersectionAction } from "./simulation/map_roads";
   import { setIntersectionAction, showMap } from "./simulation/map_roads";
   import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
-  import { competing, debugs } from "./store";
+  import { debugs } from "./store";
   import { runAllSimulations, runSimulation } from "./runner";
-  import { startCompetition, timers } from "./competition";
+  import { startCompetition } from "./competition";
+  import { stopwatchList } from "./timer";
+  import Stopwatch from "./Stopwatch.svelte";
 
   let building = false;
 
@@ -106,6 +108,20 @@
       return r;
     });
   }
+
+  const stoptime = (ms: number): string => {
+    const seconds = (ms / 1000) % 60;
+    const minutes = (ms / (1000 * 60)) % 60;
+    const centiseconds = (ms / 10) % 100;
+
+    return `${Math.floor(minutes).toString().padStart(2, "0")}:${Math.floor(
+      seconds,
+    )
+      .toString()
+      .padStart(2, "0")}.${Math.floor(centiseconds)
+      .toString()
+      .padStart(2, "0")}`;
+  };
 </script>
 
 <div class="app">
@@ -120,37 +136,35 @@
         <div id="pixiContainer"></div>
       </div>
 
-      {#if !$competing}
-      <div class="sim-controls">
-        <button on:click={() => runSimulation()}>Jooksuta</button>
-        <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
-        <button on:click={() => startCompetition()}>Compete</button>
-        <button
-          class:chosenA={!!$chosenPointA}
-          on:click={() => choosePoint("pointA")}>Vali alguspunkt</button
-        >
-        <button
-          class:chosenB={!!$chosenPointB}
-          on:click={() => choosePoint("pointB")}>Vali sihtpunkt</button
-        >
-        <!-- <button on:click={() => startBuilder()}>Map builder</button>
+      {#if !$stopwatchList.length}
+        <div class="sim-controls">
+          <button on:click={() => runSimulation()}>Jooksuta</button>
+          <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
+          <button on:click={() => startCompetition()}>Compete</button>
+          <button
+            class:chosenA={!!$chosenPointA}
+            on:click={() => choosePoint("pointA")}>Vali alguspunkt</button
+          >
+          <button
+            class:chosenB={!!$chosenPointB}
+            on:click={() => choosePoint("pointB")}>Vali sihtpunkt</button
+          >
+          <!-- <button on:click={() => startBuilder()}>Map builder</button>
           <button on:click={() => downloadBuiltMap()}>Export builder</button> -->
-        <!-- <button class="fullscreen" on:click={() => fullscreen()}
+          <!-- <button class="fullscreen" on:click={() => fullscreen()}
             >Fullscreen</button
           > -->
-      </div>
+        </div>
       {/if}
 
-      {#if $competing}
+      {#if $stopwatchList.length}
         <div class="leaderboard">
-          {#each $timers as timer}
-            <div
-              class="timer-item"
-              style="border-left: 4px solid {timer.color}"
-            >
-              <span class="timer-name">{timer.name}</span>
-              <span class="timer-value">00:00</span>
-            </div>
+          {#each $stopwatchList as timer, idx}
+            <Stopwatch
+              {timer}
+              name={$runs[idx].name || tabName(idx)}
+              color={$runs[idx].color}
+            />
           {/each}
         </div>
       {/if}
@@ -222,23 +236,5 @@
     flex-direction: row;
     gap: 8px;
     padding: 10px;
-  }
-
-  .timer-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    background: #f5f5f5;
-    border-radius: 4px;
-  }
-
-  .timer-name {
-    margin-right: 10px;
-  }
-
-  .timer-value {
-    font-family: monospace;
-    font-size: 12px;
   }
 </style>

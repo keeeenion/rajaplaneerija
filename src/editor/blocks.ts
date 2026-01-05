@@ -371,7 +371,7 @@ Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
       .appendField('ristmikuni');
 
     this.setInputsInline(true);
-    this.setOutput(true, 'Ristmik');
+    this.setOutput(true, 'Number');
     this.setColour(160);
   },
 };
