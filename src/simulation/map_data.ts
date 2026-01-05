@@ -1,4 +1,4 @@
-import { map_parts } from "./map_parts";
+import { map_parts as stage1 } from "./weights/stage1";
 
 export interface MapNode {
   id: number;
@@ -47,23 +47,34 @@ export const mapData: MapData = {
     },
   },
 
-  nodes: map_parts.nodes,
-  edges: map_parts.edges,
+  nodes: [],
+  edges: [],
 };
 
+// todo: replace with get functions?
 export const nodeMap = new Map<number, MapNode>();
 export const adjacency: Record<number, number[]> = {};
 export const weights: Record<string, number> = {};
-// todo: replace with get functions
 
-mapData.nodes.forEach(n => {
-  nodeMap.set(n.id, n);
-  adjacency[n.id] = [];
-});
+function prepareStage(stage: number) {
+  let map_parts = stage1;
 
-mapData.edges.forEach(e => {
-  adjacency[e.from].push(e.to);
-  adjacency[e.to].push(e.from);
-  weights[`${e.from}|${e.to}`] = e.weight;
-  weights[`${e.to}|${e.from}`] = e.weight;
-});
+  // todo additional stages
+
+  mapData.nodes = map_parts.nodes;
+  mapData.edges = map_parts.edges;
+
+  mapData.nodes.forEach(n => {
+    nodeMap.set(n.id, n);
+    adjacency[n.id] = [];
+  });
+
+  mapData.edges.forEach(e => {
+    adjacency[e.from].push(e.to);
+    adjacency[e.to].push(e.from);
+    weights[`${e.from}|${e.to}`] = e.weight;
+    weights[`${e.to}|${e.from}`] = e.weight;
+  });
+}
+
+prepareStage(1)

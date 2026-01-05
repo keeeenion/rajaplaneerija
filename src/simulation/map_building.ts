@@ -4,9 +4,6 @@ import type{ MapEdge, MapNode } from "./map_data";
 let nodes: MapNode[] = [];
 let edges: MapEdge[] = [];
 
-// let nodes: MapNode[] = map_parts.nodes;
-// let edges: MapEdge[] = map_parts.edges;
-
 /* =======================
    Layers
 ======================= */
