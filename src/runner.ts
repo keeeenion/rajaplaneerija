@@ -1,5 +1,5 @@
 import { get } from "svelte/store";
-import { activeRunId, runs, tabName, type PreparedSim } from "./editor/editor";
+import { activeRunId, runs, tabName, type PreparedSim, type Run } from "./editor/editor";
 import { animateVehicle, asyncVehicleAnimation, removeCarsFromMap, spawnVehicle } from "./simulation/car";
 import { getSimulationReferce } from "./simulation/reference";
 import { debugs } from "./store";
@@ -7,6 +7,7 @@ import { nodeMap } from "./simulation/map_data";
 import { buildSimulation } from "./editor/compiler";
 import { resolvePath } from "./simulation/map";
 import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
+import { Stopwatch } from "./timer";
 
 function clearDebugs() {
     debugs.set([])
@@ -29,20 +30,22 @@ function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
         color: run.color,
         start: nodeMap.get(A)!,
     });
-    // vehicle.thinking();
 
     // run user code for it to derive the path to take
-    let path = buildSimulation(idx, simulation);
+    const sim = buildSimulation(idx, simulation);
+    
+    if (!sim) return { vehicle, simulation, error: "Programm katkes" }
+    const {list, taken} = sim;
 
-    const valid = resolvePath([A, ...path]);
+    const valid = resolvePath([A, ...list]);
     if (!valid || !valid.length) {
         console.error("Teekond on auklik")
-        return { vehicle, simulation, error: "Teekond on auklik" }
+        return { vehicle, simulation, taken_ms: taken, error: "Teekond on auklik" }
     }
 
     vehicle.assignPath(valid);
 
-    return { vehicle, simulation };
+    return { vehicle, simulation, taken_ms: taken };
 }
 
 async function cancelPrevious() {
@@ -62,6 +65,8 @@ function startRunner(sim: PreparedSim) {
         controller: controller,
         promise: runner,
     })
+
+    return runner
 }
 
 export async function runSimulation() {
@@ -115,7 +120,7 @@ export async function runAllSimulations() {
         return;
     }
 
-    const sims = get(runs)
+    return get(runs)
         .map((r, idx) => prepareSimulation(idx, A, B))
         .filter(s => {
             if (s.error) {
@@ -124,6 +129,33 @@ export async function runAllSimulations() {
             return !s.error
         })
         .map(startRunner)
+}
 
-    await Promise.all(sims)
+export async function runCompetition(A: number, B: number, competitors: Run[]) {
+    await cancelPrevious();
+    clearDebugs();
+    removeCarsFromMap();
+
+    // animate car thinking animations
+    // time each function solution
+    // create prepared simulations
+
+    // start timers
+    // update UI
+    // start animating
+
+    // return times
+
+    await Promise.all(competitors.map(
+        async (c, idx) => {
+            const sim = prepareSimulation(idx, A, B)
+
+            // todo: sim.error handle
+            // add to the timer?
+
+            const timer = new Stopwatch();
+            await startRunner(sim)
+            return timer;
+        }
+    ))
 }

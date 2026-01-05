@@ -32,7 +32,8 @@ function chooseIntersection(
             break;
     }
 
-    showOnlyRoadsAndChosenPoints();
+    const points = [get(chosenPointA), get(chosenPointB)] as any;
+    showOnlyRoadsAndChosenPoints(points);
     intersectionAction = undefined;
 }
 
@@ -63,25 +64,25 @@ function drawEdges() {
     }
 }
 
-function drawNodes(numbers = false, only_chosen = false) {
+function drawNodes(numbers = false, chosen?: [number, number]) {
     for (const node of mapData.nodes) {
         const g = new PIXI.Graphics();
+        let c = false;
 
-        const A = get(chosenPointA);
-        const B = get(chosenPointB);
-        let chosen = false;
+        const A = chosen ? chosen[0] : null
+        const B = chosen ? chosen[1] : null
 
         let color: PIXI.FillInput = 0xffcc00;
         if (A === node.id) {
             color = 0x0b42e8;
-            chosen = true;
+            c = true;
         }
         if (B === node.id) {
             color = 0x03a503;
-            chosen = true;
+            c = true;
         }
 
-        if (only_chosen && !chosen) continue;
+        if (chosen?.length && !c) continue;
 
         g.circle(0, 0, 6).fill(color);
         g.x = node.x;
@@ -123,12 +124,12 @@ export function showOnlyIntersections(numbers = false) {
     drawNodes(numbers);
 }
 
-export function showOnlyRoadsAndChosenPoints() {
+export function showOnlyRoadsAndChosenPoints(points: [number, number]) {
     roadsLayer.clear();
     nodeLayer.removeChildren();
 
     drawEdges();
-    drawNodes(true, true);
+    drawNodes(true, points);
 }
 
 export function showMap() {

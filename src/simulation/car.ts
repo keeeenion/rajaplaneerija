@@ -8,7 +8,7 @@ interface CarDef {
 
 function deriveSpeed(weight: number) {
   const minWeight = 1;
-  const maxWeight = 10;
+  const maxWeight = 30;
   const minSpeed = 1.7;
   const maxSpeed = 0.5;
 

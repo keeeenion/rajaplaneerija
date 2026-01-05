@@ -14,7 +14,7 @@ import { get, writable } from "svelte/store";
 import { template } from "./template_simple";
 import { Car} from "../simulation/car";
 
-type Run = {
+export type Run = {
     color: string;
     xml: null | string;
     name?: string;
@@ -74,6 +74,7 @@ export type PreparedSim = {
     vehicle: Car;
     simulation: SimulationReference;
     error?: string;
+    taken_ms?: number;
 }
 
 export function initEditor() {

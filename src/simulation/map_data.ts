@@ -90,6 +90,8 @@ export function prepareStage(stage: number) {
     weights[`${e.from}|${e.to}`] = e.weight;
     weights[`${e.to}|${e.from}`] = e.weight;
   });
+
+  return [map_parts.A, map_parts.B]
 }
 
 prepareStage(1)

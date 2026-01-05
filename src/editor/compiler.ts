@@ -4,6 +4,7 @@ import type { SimulationReference } from "../simulation/reference";
 import { activeRunId, runs, saveWorkspaceToXml } from "./editor";
 import { get } from "svelte/store";
 import { error } from "../store";
+import { Stopwatch } from "../timer";
 
 function buildCode(xmlText: string) {
     const headlessWorkspace = new Blockly.Workspace();
@@ -24,11 +25,13 @@ function runBlocklyCode(code: string, simulation: SimulationReference) {
     return fn(simulation);
 }
 
-export function buildSimulation(idx: number, simulation: SimulationReference) {
-    const run = get(runs).find((r, i) => i === idx);
+export function buildSimulation(idx: number, simulation: SimulationReference): {list: number[], taken?: number} | undefined {
+    const run = get(runs).find((_, i) => i === idx);
     if (!run) return;
     if (idx == get(activeRunId)) run.xml = saveWorkspaceToXml();
     if (!run.xml) return;
+
+    const timer = new Stopwatch();
 
     let code;
     try {
@@ -37,7 +40,7 @@ export function buildSimulation(idx: number, simulation: SimulationReference) {
         console.error(err)
         error.set(err.message)
         alert("Probleem: " + err.message);
-        return
+        return;
     }
 
     console.log(code)
@@ -51,6 +54,8 @@ export function buildSimulation(idx: number, simulation: SimulationReference) {
         alert("Probleem: " + err.message);
         return;
     }
+
+    const taken = timer.stop();
     
     if (!list) {
         const err = "Tagastatud list on tühi või olematu"
@@ -62,6 +67,5 @@ export function buildSimulation(idx: number, simulation: SimulationReference) {
     }
 
     console.log(list)
-
-    return list
+    return {list, taken}
 }

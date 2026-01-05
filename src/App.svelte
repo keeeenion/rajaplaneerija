@@ -16,9 +16,9 @@
   import type { IntersectionAction } from "./simulation/map_roads";
   import { setIntersectionAction, showMap } from "./simulation/map_roads";
   import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
-  import { debugs } from "./store";
+  import { competing, debugs } from "./store";
   import { runAllSimulations, runSimulation } from "./runner";
-    import { startCompetition, timers } from "./competition";
+  import { startCompetition, timers } from "./competition";
 
   let building = false;
 
@@ -120,6 +120,7 @@
         <div id="pixiContainer"></div>
       </div>
 
+      {#if !$competing}
       <div class="sim-controls">
         <button on:click={() => runSimulation()}>Jooksuta</button>
         <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
@@ -138,15 +139,21 @@
             >Fullscreen</button
           > -->
       </div>
+      {/if}
 
-      <div class="leaderboard">
+      {#if $competing}
+        <div class="leaderboard">
           {#each $timers as timer}
-            <div class="timer-item" style="border-left: 4px solid {timer.color}">
+            <div
+              class="timer-item"
+              style="border-left: 4px solid {timer.color}"
+            >
               <span class="timer-name">{timer.name}</span>
               <span class="timer-value">00:00</span>
             </div>
           {/each}
-      </div>
+        </div>
+      {/if}
 
       <div class="sim-runs">
         {#each $runs as run, idx}
