@@ -324,6 +324,10 @@ export const toolbox = {
         },
         {
           kind: 'block',
+          type: 'remove_from_list',
+        },
+        {
+          kind: 'block',
           type: 'lists_repeat',
           inputs: {
             NUM: {

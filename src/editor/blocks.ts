@@ -428,4 +428,29 @@ javascriptGenerator.forBlock[TYPE_ALL] = () => {
   return ['simulation.allIntersections()', Order.ATOMIC];
 };
 
-// eemalda loendist <blank> element <blank>
+const TYPE_REMOVE = 'remove_from_list';
+
+Blockly.Blocks[TYPE_REMOVE] = {
+  init() {
+    this.appendValueInput('LIST')
+      .setCheck('Array')
+      .appendField('eemalda loendist');
+    this.appendValueInput('ITEM')
+      .setCheck(null)
+      .appendField('element');
+
+    this.setInputsInline(true);
+    this.setOutput(true, 'Array');
+    this.setColour(260);
+    this.setTooltip('Tagastab uue loendi, kus märgitud element on eemaldatud.');
+  },
+};
+
+javascriptGenerator.forBlock[TYPE_REMOVE] = (block, generator) => {
+  const list = generator.valueToCode(block, 'LIST', Order.MEMBER) || '[]';
+  const item = generator.valueToCode(block, 'ITEM', Order.NONE) || 'null';
+
+  const code = `${list}.filter(x => x !== ${item})`;
+
+  return [code, Order.FUNCTION_CALL];
+};
