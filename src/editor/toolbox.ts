@@ -316,7 +316,7 @@ export const toolbox = {
         },
         {
           kind: 'block',
-          type: 'lists_create_with',
+          type: 'empty_list',
         },
         {
           kind: 'block',

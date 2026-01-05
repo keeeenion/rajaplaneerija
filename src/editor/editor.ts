@@ -94,7 +94,7 @@ function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
     let path = buildSimulation(idx, simulation);
 
     const valid = resolvePath([A, ...path]);
-    if (!valid) {
+    if (!valid || !valid.length) {
         console.error("path is invalid")
         return { vehicle, simulation, error: "Teekond on auklik" }
     }

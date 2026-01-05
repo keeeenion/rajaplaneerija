@@ -176,7 +176,6 @@ javascriptGenerator.forBlock[TYPE_GREEDY] = (block) => {
 
 const TYPE_GETTER = "simulation_getters"
 
-// Block definition
 Blockly.Blocks[TYPE_GETTER] = {
   init() {
     this.appendDummyInput()
@@ -197,8 +196,7 @@ Blockly.Blocks[TYPE_GETTER] = {
     this.appendValueInput('CENTER')
       .setCheck('Ristmik');
 
-    this.setOutput(true, this.getOutputType());
-
+    this.setOutput(true, 'NUMBER');
     this.setInputsInline(true);
     this.setColour(160);
   },
@@ -227,34 +225,15 @@ Blockly.Blocks[TYPE_GETTER] = {
   }
 };
 
-// JavaScript generator
 javascriptGenerator.forBlock[TYPE_GETTER] = function(block: any) {
   const mode = block.getFieldValue('MODE');
-  const center = Blockly.JavaScript.valueToCode(block, 'CENTER', Blockly.JavaScript.ORDER_ATOMIC);
+  const ristmik = javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC);
 
-  switch (mode) {
-    case 'RISTMIKU NUMBER':
-      return [`getNumber(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'NAABER':
-      return [`getNeighbor(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'KAUGUS':
-      return [`getDistance(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'KOORDINAAT':
-      return [`getCoordinate(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'EELMINE_RISTMIK':
-      return [`getPreviousIntersection(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'KAS_KÜLASTATUD':
-      return [`isVisited(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'KAS_AVASTATUD':
-      return [`isDiscovered(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    default:
-      return ['null', Blockly.JavaScript.ORDER_ATOMIC];
-  }
+  return [`simulation.getter(${ristmik},"${mode}")`, Order.FUNCTION_CALL];
 };
 
 const TYPE_SETTER = "simulation_setters"
 
-// Block definition
 Blockly.Blocks[TYPE_SETTER] = {
   init() {
     this.appendDummyInput()
@@ -298,7 +277,6 @@ Blockly.Blocks[TYPE_SETTER] = {
   },
 
   onchange() {
-    // Update VALUE input check if MODE changes
     const valueInput = this.getInput('VALUE');
     if (valueInput) {
       valueInput.setCheck(this.getValueType());
@@ -308,53 +286,10 @@ Blockly.Blocks[TYPE_SETTER] = {
 
 javascriptGenerator.forBlock[TYPE_SETTER] = function(block: any) {
   const mode = block.getFieldValue('MODE');
-  const center = Blockly.JavaScript.valueToCode(block, 'CENTER', Blockly.JavaScript.ORDER_ATOMIC);
-  const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ATOMIC);
+  const ristmik = javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC);
+  const value = javascriptGenerator.valueToCode(block, 'VALUE', Order.ATOMIC);
 
-  switch (mode) {
-    case 'RISTMIKU NUMBER':
-      return `setNumber(${center}, ${value});\n`;
-    case 'NAABER':
-      return `setNeighbor(${center}, ${value});\n`;
-    case 'KAUGUS':
-      return `setDistance(${center}, ${value});\n`;
-    case 'KOORDINAAT':
-      return `setCoordinate(${center}, ${value});\n`;
-    case 'EELMINE_RISTMIK':
-      return `setPreviousIntersection(${center}, ${value});\n`;
-    case 'KAS_KÜLASTATUD':
-      return `setVisited(${center}, ${value});\n`;
-    case 'KAS_AVASTATUD':
-      return `setDiscovered(${center}, ${value});\n`;
-    default:
-      return `null;\n`;
-  }
-};
-
-
-// JavaScript generator
-javascriptGenerator.forBlock[TYPE_SETTER] = function(block: any) {
-  const mode = block.getFieldValue('MODE');
-  const center = Blockly.JavaScript.valueToCode(block, 'CENTER', Blockly.JavaScript.ORDER_ATOMIC);
-
-  switch (mode) {
-    case 'NUMBER':
-      return [`getNumber(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'NAABER':
-      return [`getNeighbor(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'KAUGUS':
-      return [`getDistance(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'KOORDINAAT':
-      return [`getCoordinate(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'EELMINE_RISTMIK':
-      return [`getPreviousIntersection(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'KAS_KÜLASTATUD':
-      return [`isVisited(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    case 'KAS_AVASTATUD':
-      return [`isDiscovered(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
-    default:
-      return ['null', Blockly.JavaScript.ORDER_ATOMIC];
-  }
+  return `simulation.setter(${ristmik}, "${mode}", ${value});\n`;
 };
 
 const TYPE_IN_LIST = 'ristmik_in_list';
@@ -412,17 +347,16 @@ javascriptGenerator.forBlock[TYPE_DEBUG] = (block) => {
   return `simulation.debug(${JSON.stringify(text)}, ${value});\n`;
 };
 
-
 const TYPE_STRAIGHT_LINE = 'straightline_distance';
 
 Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
   init() {
-    this.appendValueInput('CENTER')
+    this.appendValueInput('A')
       .setCheck('Ristmik')
       .appendField('Sirgjooneline distantsi hinnang ristmikust');
 
-    this.appendValueInput('RISTMIKUNI')
-      .setCheck('Array')
+    this.appendValueInput('B')
+      .setCheck('Ristmik')
       .appendField('ristmikuni');
 
     this.setInputsInline(true);
@@ -433,19 +367,27 @@ Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
 
 // todo
 javascriptGenerator.forBlock[TYPE_STRAIGHT_LINE] = (block) => {
-  const center =
-    javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC) || 'null';
-  const list =
-    javascriptGenerator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
-  const mode = block.getFieldValue('MODE');
-
-  const cmp =
-    mode === 'MIN'
-      ? '(a,b)=>simulation.distanceBetween(center,a)-simulation.distanceBetween(center,b)'
-      : '(a,b)=>simulation.distanceBetween(center,b)-simulation.distanceBetween(center,a)';
+  const A = javascriptGenerator.valueToCode(block, 'A', Order.ATOMIC);
+  const B = javascriptGenerator.valueToCode(block, 'B', Order.ATOMIC);
 
   return [
-    `${list}.slice().sort(${cmp})[0]`,
+    `simulation.pythagoras(${A},${B})`,
     Order.FUNCTION_CALL,
   ];
+};
+
+const TYPE_EMPTY_LIST = 'empty_list';
+
+Blockly.Blocks[TYPE_EMPTY_LIST] = {
+  init() {
+    this.appendDummyInput()
+      .appendField('Uus tühi loend');
+
+    this.setOutput(true, 'Array');
+    this.setColour(260);
+  },
+};
+
+javascriptGenerator.forBlock[TYPE_EMPTY_LIST] = () => {
+  return ['[]', Order.ATOMIC];
 };

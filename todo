@@ -1,12 +1,4 @@
 calculate algorithm weight
 detect cars have reached destination
 
-linnulennu kaugus (pütaagoros) (ceil ja /10)
-setter for getter
-
-list_minus
-A (1,2,3,4,5,6,7)
-B (1,2,3,7)
-=> [4,5,6]
-
 set block color based on datatypes
