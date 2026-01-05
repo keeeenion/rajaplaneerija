@@ -35,13 +35,3 @@ export async function initSimulation(map: string, resize = 4) {
 
   showOnlyRoadsAndChosenPoints()
 }
-
-export function fullscreen() {
-  const container = document.getElementById("pixiContainer");
-  container?.requestFullscreen()
-  // app.renderer.resize(window.width, window.innerHeight);
-  // Optional: scale your stage if needed
-  // app.stage.scale.x = window.innerWidth / 800;
-  // app.stage.scale.y = window.innerHeight / 600;
-}
-

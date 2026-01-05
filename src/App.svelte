@@ -15,13 +15,9 @@
     stopMapBuilding,
   } from "./simulation/map_building";
   import type { IntersectionAction } from "./simulation/map_roads";
-  import {
-    setIntersectionAction,
-    showMap,
-    showOnlyIntersections,
-  } from "./simulation/map_roads";
-  import { app, chosenPointA, chosenPointB, fullscreen } from "./simulation/simulation";
-    import { debugs } from "./store";
+  import { setIntersectionAction, showMap } from "./simulation/map_roads";
+  import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
+  import { debugs } from "./store";
 
   let building = false;
 
@@ -63,12 +59,12 @@
 
   async function handleFiles(event: Event) {
     const target = event.target as HTMLInputElement;
-    const files = target.files
+    const files = target.files;
     if (files?.length && files?.length >= 1 && forTab != undefined) {
       const f = files[0];
-      chooseTab(forTab)
-      const content = await f.text()
-      loadWorkspaceFromXml(content)
+      chooseTab(forTab);
+      const content = await f.text();
+      loadWorkspaceFromXml(content);
     }
   }
 
@@ -79,7 +75,7 @@
     saveCurrentTab();
 
     const r = get(runs);
-    console.log(r[idx].xml)
+    console.log(r[idx].xml);
     const blob = new Blob([r[idx].xml || ""], {
       type: "application/xml",
     });
@@ -92,6 +88,15 @@
 
     URL.revokeObjectURL(url);
   }
+
+  function fullscreen() {
+    const container = document.getElementById("fullscreen");
+    container?.requestFullscreen();
+    // app.renderer.resize(window.width, window.innerHeight);
+    // Optional: scale your stage if needed
+    // app.stage.scale.x = window.innerWidth / 800;
+    // app.stage.scale.y = window.innerHeight / 600;
+  }
 </script>
 
 <div class="app">
@@ -101,26 +106,28 @@
     <div id="blocklyDiv"></div>
 
     <!-- Right side: simulation -->
-    <section class="simulation-area">
-      <div class="simulation-map">
-        <div id="pixiContainer"></div>
-      </div>
+    <section id="fullscreen" class="simulation-area">
+        <div class="simulation-map">
+          <div id="pixiContainer"></div>
+        </div>
 
-      <div class="sim-controls">
-        <button on:click={() => runSimulation()}>Jooksuta</button>
-        <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
-        <button
-          class:chosenA={!!$chosenPointA}
-          on:click={() => choosePoint("pointA")}>Vali alguspunkt</button
-        >
-        <button
-          class:chosenB={!!$chosenPointB}
-          on:click={() => choosePoint("pointB")}>Vali sihtpunkt</button
-        >
-        <!-- <button on:click={() => startBuilder()}>Map builder</button>
-        <button on:click={() => downloadBuiltMap()}>Export builder</button> -->
-        <!-- <button class="fullscreen" on:click={() => fullscreen()} >Fullscreen</button> -->
-      </div>
+        <div class="sim-controls">
+          <button on:click={() => runSimulation()}>Jooksuta</button>
+          <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
+          <button
+            class:chosenA={!!$chosenPointA}
+            on:click={() => choosePoint("pointA")}>Vali alguspunkt</button
+          >
+          <button
+            class:chosenB={!!$chosenPointB}
+            on:click={() => choosePoint("pointB")}>Vali sihtpunkt</button
+          >
+          <!-- <button on:click={() => startBuilder()}>Map builder</button>
+          <button on:click={() => downloadBuiltMap()}>Export builder</button> -->
+          <!-- <button class="fullscreen" on:click={() => fullscreen()}
+            >Fullscreen</button
+          > -->
+        </div>
 
       <div class="sim-runs">
         {#each $runs as run, idx}
@@ -166,7 +173,7 @@
 
       <div class="debug-window">
         {#each $debugs as entry}
-        <p>{entry}</p>
+          <p>{entry}</p>
         {/each}
       </div>
     </section>

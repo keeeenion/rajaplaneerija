@@ -203,6 +203,10 @@ Blockly.Blocks[TYPE_GETTER] = {
     this.setColour(160);
   },
 
+  onchange() {
+    this.setOutput(true, this.getOutputType());
+  },
+
   getOutputType() {
     const mode = this.getFieldValue('MODE');
     switch (mode) {
@@ -302,7 +306,6 @@ Blockly.Blocks[TYPE_SETTER] = {
   }
 };
 
-// JavaScript generator
 javascriptGenerator.forBlock[TYPE_SETTER] = function(block: any) {
   const mode = block.getFieldValue('MODE');
   const center = Blockly.JavaScript.valueToCode(block, 'CENTER', Blockly.JavaScript.ORDER_ATOMIC);
@@ -422,7 +425,7 @@ Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
       .setCheck('Array')
       .appendField('ristmikuni');
 
-    this.setInputsInline(true); // Make inputs appear in a single line
+    this.setInputsInline(true);
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
   },
