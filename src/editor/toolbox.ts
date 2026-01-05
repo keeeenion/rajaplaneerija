@@ -429,7 +429,7 @@ export const toolbox = {
     {
       kind: 'category',
       name: 'Simulatsioon',
-      colour: '#5C81A6',
+      colour: '#5BA58C',
       contents: [
         {
           kind: 'block',
