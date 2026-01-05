@@ -7,7 +7,7 @@ const TYPE_START = 'start_intersection';
 Blockly.Blocks[TYPE_START] = {
   init() {
     this.appendDummyInput()
-      .appendField('Alguspunkt');
+      .appendField('alguspunkt');
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
@@ -23,7 +23,7 @@ const TYPE_TARGET = 'target_intersection';
 Blockly.Blocks[TYPE_TARGET] = {
   init() {
     this.appendDummyInput()
-      .appendField('Sihtpunkt');
+      .appendField('sihtpunkt');
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
@@ -40,7 +40,7 @@ Blockly.Blocks[TYPE_DISTANCE] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Ristmik')
-      .appendField('Kaugus ristmikust');
+      .appendField('kaugus ristmikust');
 
     this.appendValueInput('B')
       .setCheck('Ristmik')
@@ -68,7 +68,7 @@ Blockly.Blocks[TYPE_RANDOM_FROM_LIST] = {
   init() {
     this.appendValueInput('LIST')
       .setCheck('Array')
-      .appendField('Vali juhuslik ristmik loendist');
+      .appendField('vali juhuslik ristmik loendist');
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
@@ -91,7 +91,7 @@ Blockly.Blocks[TYPE_LIST_MINUS] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Array')
-      .appendField('Elemendid loendist');
+      .appendField('elemendid loendist');
 
     this.appendValueInput('B')
       .setCheck('Array')
@@ -113,37 +113,13 @@ javascriptGenerator.forBlock[TYPE_LIST_MINUS] = (block) => {
   ];
 };
 
-const TYPE_MIN_DISTANCE = 'min_distance_intersection';
-
-Blockly.Blocks[TYPE_MIN_DISTANCE] = {
-  init() {
-    this.appendValueInput('LIST')
-      .setCheck('Array')
-      .appendField('Vali väikseima "MÄÄRATUD KAUGUS ALGUSEST" väärtusega ristmik loendist');
-
-    this.setOutput(true, 'Ristmik');
-    this.setColour(160);
-  },
-};
-
-// todo:
-javascriptGenerator.forBlock[TYPE_MIN_DISTANCE] = (block) => {
-  const list =
-    javascriptGenerator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
-
-  return [
-    `${list}.slice().sort((a,b)=>(a.user_distance??Infinity)-(b.user_distance??Infinity))[0]`,
-    Order.FUNCTION_CALL,
-  ];
-};
-
 const TYPE_GREEDY = 'greedy_neighbor';
 
 Blockly.Blocks[TYPE_GREEDY] = {
   init() {
     this.appendValueInput('CENTER')
       .setCheck('Ristmik')
-      .appendField('Tagasta kõige')
+      .appendField('tagasta kõige')
       .appendField(new Blockly.FieldDropdown([
         ['LÄHEM', 'MIN'],
         ['KAUGEM', 'MAX'],
@@ -192,7 +168,7 @@ Blockly.Blocks[TYPE_GETTER] = {
     });
 
     this.appendDummyInput()
-      .appendField('Küsi')
+      .appendField('küsi')
       .appendField(dropdown, 'MODE')
       .appendField('ristmikult');
 
@@ -266,7 +242,7 @@ Blockly.Blocks[TYPE_SETTER] = {
     });
 
     this.appendDummyInput()
-      .appendField('Määra ristmiku');
+      .appendField('määra ristmiku');
 
     this.appendValueInput('CENTER')
       .setCheck('Ristmik');
@@ -342,7 +318,7 @@ Blockly.Blocks[TYPE_IN_LIST] = {
   init() {
     this.appendValueInput('RISTMIK')
       .setCheck('Ristmik')
-      .appendField('Ristmik');
+      .appendField('ristmik');
 
     this.appendValueInput('LIST')
       .setCheck('Array')
@@ -373,7 +349,7 @@ const TYPE_DEBUG = 'debug_block';
 Blockly.Blocks[TYPE_DEBUG] = {
   init() {
     this.appendValueInput('VALUE')
-      .appendField('Prindi tahvlile: ')
+      .appendField('prindi tahvlile: ')
       .appendField(new Blockly.FieldTextInput('KIRJELDUS'), 'TEXT');
 
     this.setPreviousStatement(true);
@@ -397,7 +373,7 @@ Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Ristmik')
-      .appendField('Sirgjooneline distantsi hinnang ristmikust');
+      .appendField('sirgjooneline distantsi hinnang ristmikust');
 
     this.appendValueInput('B')
       .setCheck('Ristmik')
@@ -425,7 +401,7 @@ const TYPE_EMPTY_LIST = 'empty_list';
 Blockly.Blocks[TYPE_EMPTY_LIST] = {
   init() {
     this.appendDummyInput()
-      .appendField('Uus tühi loend');
+      .appendField('uus tühi loend');
 
     this.setOutput(true, 'Array');
     this.setColour(260);
@@ -434,4 +410,20 @@ Blockly.Blocks[TYPE_EMPTY_LIST] = {
 
 javascriptGenerator.forBlock[TYPE_EMPTY_LIST] = () => {
   return ['[]', Order.ATOMIC];
+};
+
+const TYPE_ALL = 'all_intersections';
+
+Blockly.Blocks[TYPE_ALL] = {
+  init() {
+    this.appendDummyInput()
+      .appendField('uus loend kõigi ristmikega');
+
+    this.setOutput(true, 'Array');
+    this.setColour(260);
+  },
+};
+
+javascriptGenerator.forBlock[TYPE_ALL] = () => {
+  return ['simulation.allIntersections()', Order.ATOMIC];
 };

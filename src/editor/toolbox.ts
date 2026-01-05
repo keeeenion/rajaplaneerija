@@ -320,6 +320,10 @@ export const toolbox = {
         },
         {
           kind: 'block',
+          type: 'all_intersections',
+        },
+        {
+          kind: 'block',
           type: 'lists_repeat',
           inputs: {
             NUM: {
@@ -454,10 +458,6 @@ export const toolbox = {
         {
           kind: 'block',
           type: 'ristmik_in_list',
-        },
-        {
-          kind: 'block',
-          type: 'min_distance_intersection',
         },
         {
           kind: 'block',

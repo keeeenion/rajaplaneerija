@@ -130,6 +130,10 @@ export class SimulationReference {
         const dist = Math.sqrt(dx * dx + dy * dy);
         return Math.ceil(dist)
     };
+
+    allIntersections() {
+        return Array.from(nodeMap.keys()).sort((a, b) => a - b);
+    }
 }
 
 export function getSimulationReferce(runId: number, pointA: number, pointB: number): SimulationReference {
