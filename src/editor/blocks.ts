@@ -40,7 +40,7 @@ Blockly.Blocks[TYPE_DISTANCE] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Ristmik')
-      .appendField('kaugus ristmikust');
+      .appendField('ajakulu ristmikust');
 
     this.appendValueInput('B')
       .setCheck('Ristmik')
@@ -119,33 +119,24 @@ Blockly.Blocks[TYPE_GREEDY] = {
   init() {
     this.appendValueInput('CENTER')
       .setCheck('Ristmik')
-      .appendField('tagasta kõige')
+      .appendField('tagasta ajaliselt kõige')
       .appendField(new Blockly.FieldDropdown([
-        ['LÄHEM', 'MIN'],
-        ['KAUGEM', 'MAX'],
+        ['SUUREMA', 'SUUREMA'],
+        ['VÄIKSEMA', 'VÄIKSEMA'],
       ]), 'MODE')
-      .appendField('naaber ristmikule');
+      .appendField('ajakuluga naaber ristmikule');
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
   },
 };
 
-// todo
 javascriptGenerator.forBlock[TYPE_GREEDY] = (block) => {
-  const center =
-    javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC) || 'null';
-  const list =
-    javascriptGenerator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
+  const ristmik = javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC);
   const mode = block.getFieldValue('MODE');
 
-  const cmp =
-    mode === 'MIN'
-      ? '(a,b)=>simulation.distanceBetween(center,a)-simulation.distanceBetween(center,b)'
-      : '(a,b)=>simulation.distanceBetween(center,b)-simulation.distanceBetween(center,a)';
-
   return [
-    `${list}.slice().sort(${cmp})[0]`,
+    `simulation.greedy_distance(${ristmik},"${mode}")`,
     Order.FUNCTION_CALL,
   ];
 };
@@ -158,7 +149,7 @@ Blockly.Blocks[TYPE_GETTER] = {
       ['RISTMIKU NUMBER', 'NUMBER'],
       ['NAABRID', 'NAABER'],
       ['KOORDINAAT', 'KOORDINAAT'],
-      ['MÄÄRATUD KAUGUS ALGUSEST', 'KAUGUS'],
+      ['MÄÄRATUD AJAKULU ALGUSEST', 'KAUGUS'],
       ['MÄÄRATUD EELMINE RISTMIK', 'EELMINE_RISTMIK'],
       ['KAS MÄÄRATUD KÜLASTATUKS', 'KAS_KÜLASTATUD'],
       ['KAS MÄÄRATUD AVASTATUKS', 'KAS_AVASTATUD'],
@@ -232,7 +223,7 @@ const TYPE_SETTER = "simulation_setters";
 Blockly.Blocks[TYPE_SETTER] = {
   init(this: Blockly.Block) {
     const dropdown = new Blockly.FieldDropdown([
-      ['MÄÄRATUD KAUGUS ALGUSEST', 'KAUGUS'],
+      ['MÄÄRATUD AJAKULU ALGUSEST', 'KAUGUS'],
       ['MÄÄRATUD EELMINE RISTMIK', 'EELMINE_RISTMIK'],
       ['KAS MÄÄRATUD KÜLASTATUKS', 'KAS_KÜLASTATUD'],
       ['KAS MÄÄRATUD AVASTATUKS', 'KAS_AVASTATUD'],

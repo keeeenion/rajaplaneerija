@@ -78,7 +78,7 @@ export class SimulationReference {
         if (!entry) entry = {}
 
         const r = nodeMap.get(ristmik);
-        if (!r) throw new Error(`Päritud ristmik ${ristmik} ei eksisteeri`)
+        if (!r) throw new Error(`Määratud ristmik ${ristmik} ei eksisteeri`)
 
         switch (key) {
             case 'KAUGUS': entry.distance = value; break;
@@ -94,7 +94,7 @@ export class SimulationReference {
         let entry = this.memory.get(ristmik)
 
         const r = nodeMap.get(ristmik);
-        if (!r) throw new Error(`Päritud ristmik ${ristmik} ei eksisteeri`)
+        if (!r) throw new Error(`Küsitud ristmik ${ristmik} ei eksisteeri`)
 
         switch (key) {
             case 'NUMBER':
@@ -133,6 +133,19 @@ export class SimulationReference {
 
     allIntersections() {
         return Array.from(nodeMap.keys()).sort((a, b) => a - b);
+    }
+
+    greedy_distance(ristmik: number, mode: string) {
+        const r = nodeMap.get(ristmik)
+        if (!r) throw new Error(`Ristmik ${ristmik} ei eksisteeri, et leida ${mode} naaber`)
+
+        const neighbours = adjacency[r.id]
+        const times = neighbours.map(n => weights[`${r.id}|${n}`])
+        const value = (mode === "VÄIKSEMA")
+            ? Math.min(...times)
+            : Math.max(...times)
+        const index = times.findIndex(t => t === value)
+        return neighbours[index]
     }
 }
 
