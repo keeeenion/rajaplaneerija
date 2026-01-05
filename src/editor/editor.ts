@@ -20,10 +20,55 @@ export type Run = {
     name?: string;
 }
 
+type PersistedState = {
+    runs: Run[];
+    activeRunId: number;
+};
+
 export const runs = writable<Run[]>([
     { color: "#ff0000", xml: null },
 ])
 export const activeRunId = writable<number>(0);
+
+const STORAGE_KEY = "rajaplaneerija:workspace";
+let persistenceReady = false;
+let isRestoring = false;
+
+function persistState() {
+    if (typeof localStorage === "undefined") return;
+    try {
+        const snapshot: PersistedState = {
+            runs: get(runs),
+            activeRunId: get(activeRunId),
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+    } catch (error) {
+        console.warn("Failed to persist workspace", error);
+    }
+}
+
+function loadPersistedState(): PersistedState | null {
+    if (typeof localStorage === "undefined") return null;
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw) as PersistedState;
+        if (!parsed || !Array.isArray(parsed.runs) || typeof parsed.activeRunId !== "number") {
+            return null;
+        }
+        const runsSanitized = parsed.runs.filter((run) => {
+            return run && typeof run.color === "string" && ("xml" in run);
+        });
+        if (!runsSanitized.length) return null;
+        return {
+            runs: runsSanitized,
+            activeRunId: parsed.activeRunId,
+        };
+    } catch (error) {
+        console.warn("Failed to load persisted workspace", error);
+        return null;
+    }
+}
 
 export function tabName(idx: number) {
     const rs = get(runs)
@@ -49,11 +94,15 @@ export function loadWorkspaceFromXml(xmlText: string | null) {
 
 export function saveCurrentTab() {
     const active = get(activeRunId);
-    const currentRun = get(runs)[active];
-    if (currentRun) {
-        currentRun.xml = saveWorkspaceToXml();
-    }
-    return currentRun
+    let currentRun: Run | undefined;
+    runs.update((r) => {
+        if (r[active]) {
+            r[active].xml = saveWorkspaceToXml();
+            currentRun = r[active];
+        }
+        return r;
+    });
+    return currentRun;
 }
 
 export function chooseTab(newRunId: number) {
@@ -91,5 +140,41 @@ export function initEditor() {
         },
     });
 
-    loadWorkspaceFromXml(template)
+    isRestoring = true;
+    const persisted = loadPersistedState();
+    if (persisted) {
+        runs.set(persisted.runs);
+        const activeId = Math.max(0, Math.min(persisted.activeRunId, persisted.runs.length - 1));
+        activeRunId.set(activeId);
+        const initialRun = persisted.runs[activeId];
+        if (initialRun?.xml) {
+            loadWorkspaceFromXml(initialRun.xml);
+        } else {
+            loadWorkspaceFromXml(template);
+        }
+    } else {
+        loadWorkspaceFromXml(template);
+    }
+    isRestoring = false;
+
+    if (!persistenceReady) {
+        persistenceReady = true;
+        runs.subscribe(() => {
+            if (isRestoring) return;
+            persistState();
+        });
+        activeRunId.subscribe(() => {
+            if (isRestoring) return;
+            persistState();
+        });
+        window.addEventListener("beforeunload", () => {
+            saveCurrentTab();
+            persistState();
+        });
+    }
+
+    workspace.addChangeListener((event) => {
+        if (event.isUiEvent) return;
+        saveCurrentTab();
+    });
 }
