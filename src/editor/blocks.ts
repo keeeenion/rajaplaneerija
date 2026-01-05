@@ -96,6 +96,7 @@ Blockly.Blocks[TYPE_LIST_MINUS] = {
       .setCheck('Array')
       .appendField('mis ei sisaldu loendis');
 
+    this.setInputsInline(true);
     this.setOutput(true, 'Array');
     this.setColour(160);
   },
@@ -250,18 +251,20 @@ const TYPE_IN_LIST = 'ristmik_in_list';
 
 Blockly.Blocks[TYPE_IN_LIST] = {
   init() {
-    this.appendValueInput('LIST')
-      .setCheck('Array')
-      .appendField('Kas loendis');
-
     this.appendValueInput('RISTMIK')
       .setCheck('Ristmik')
-      .appendField('sisaldub ristmik');
+      .appendField('Ristmik');
 
+    this.appendValueInput('LIST')
+      .setCheck('Array')
+      .appendField('sisaldub loendis');
+
+    this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
     this.setColour(160);
   },
 };
+
 
 javascriptGenerator.forBlock[TYPE_IN_LIST] = (block) => {
   const list =
