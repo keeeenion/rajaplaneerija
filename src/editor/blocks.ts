@@ -67,7 +67,7 @@ Blockly.Blocks[TYPE_RANDOM_FROM_LIST] = {
   init() {
     this.appendValueInput('LIST')
       .setCheck('Array')
-      .appendField('Vali juhuslik ristmik naabritest');
+      .appendField('Vali juhuslik ristmik loendist');
 
     this.setOutput(true, 'Ristmik');
     this.setColour(260);
@@ -90,11 +90,11 @@ Blockly.Blocks[TYPE_LIST_MINUS] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Array')
-      .appendField('Loend A');
+      .appendField('Elemendist loendist');
 
     this.appendValueInput('B')
       .setCheck('Array')
-      .appendField('miinus B');
+      .appendField('mis ei sisaldu loendis');
 
     this.setOutput(true, 'Array');
     this.setColour(260);
@@ -254,11 +254,11 @@ Blockly.Blocks[TYPE_IN_LIST] = {
   init() {
     this.appendValueInput('LIST')
       .setCheck('Array')
-      .appendField('Kas listis');
+      .appendField('Kas loendis');
 
     this.appendValueInput('RISTMIK')
       .setCheck('Ristmik')
-      .appendField('on ristmik');
+      .appendField('sisaldub ristmik');
 
     this.setOutput(true, 'Boolean');
     this.setColour(300);
