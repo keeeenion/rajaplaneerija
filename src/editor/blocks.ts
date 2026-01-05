@@ -346,6 +346,7 @@ Blockly.Blocks[TYPE_DEBUG] = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(160);
+    this.setTooltip('Tööriist programmi töö jälgimiseks. Kirjutab mustale tahvlile välja muutujate väärtused.');
   },
 };
 
@@ -373,6 +374,7 @@ Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
     this.setInputsInline(true);
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
+    this.setTooltip('Tagastab numbrilise väärtuse, mis vastab kahe ristmiku vahelisele sirgjoonelisele distantsile koordinaatide põhjal (distants on jagatud 10-ga, et see oleks võrreldavas suurusjärgus teede ajakuludega).');
   },
 };
 
@@ -395,6 +397,7 @@ Blockly.Blocks[TYPE_EMPTY_LIST] = {
 
     this.setOutput(true, 'Array');
     this.setColour(260);
+    this.setTooltip('Tagastab uue tühja loendi.');
   },
 };
 
@@ -411,6 +414,7 @@ Blockly.Blocks[TYPE_ALL] = {
 
     this.setOutput(true, 'Array');
     this.setColour(260);
+    this.setTooltip('Tagastab uue loendi, mis on täidetud kõikide olemasolevate ristmikutega.');
   },
 };
 
