@@ -49,9 +49,11 @@ function drawEdges() {
         const to = getNode(edge.to);
         if (!from || !to) continue;
 
-        // const opacity = ((edge.weight - 1) / (10 - 1)) * 100
-        let alpha =  (edge.weight - 1) / 9;
-        // if (alpha < 0.65) alpha = 0;
+
+        // calculate alpha
+        // max = 21
+        // alpha range 0-1
+        let alpha = Math.min(1, (edge.weight - 1) / 20);
 
         roadsLayer
             .moveTo(from.x, from.y)
