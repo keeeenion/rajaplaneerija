@@ -248,6 +248,112 @@ javascriptGenerator.forBlock[TYPE_GETTER] = function(block: any) {
   }
 };
 
+const TYPE_SETTER = "simulation_setters"
+
+// Block definition
+Blockly.Blocks[TYPE_SETTER] = {
+  init() {
+    this.appendDummyInput()
+      .appendField('Määra ristmiku')
+
+    this.appendValueInput('CENTER')
+      .setCheck('Ristmik');
+
+    this.appendDummyInput()
+      .appendField(new Blockly.FieldDropdown([
+        // user defined
+        ['MÄÄRATUD KAUGUS ALGUSEST', 'KAUGUS'],
+        ['MÄÄRATUD EELMINE RISTMIK', 'EELMINE_RISTMIK'],
+        ['KAS MÄÄRATUD KÜLASTATUKS', 'KAS_KÜLASTATUD'],
+        ['KAS MÄÄRATUD AVASTATUKS', 'KAS_AVASTATUD'],
+      ]), 'MODE')
+
+    this.appendValueInput('VALUE')
+      .setCheck(this.getValueType())
+      .appendField('väärtuseks');
+
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(160);
+  },
+
+  getValueType() {
+    const mode = this.getFieldValue('MODE');
+    switch (mode) {
+      case 'EELMINE_RISTMIK':
+        return 'Ristmik';
+      case 'KOORDINAAT':
+        return 'Array';
+      case 'KAS_KÜLASTATUD':
+      case 'KAS_AVASTATUD':
+        return 'Boolean';
+      default:
+        return null;
+    }
+  },
+
+  onchange() {
+    // Update VALUE input check if MODE changes
+    const valueInput = this.getInput('VALUE');
+    if (valueInput) {
+      valueInput.setCheck(this.getValueType());
+    }
+  }
+};
+
+// JavaScript generator
+javascriptGenerator.forBlock[TYPE_SETTER] = function(block: any) {
+  const mode = block.getFieldValue('MODE');
+  const center = Blockly.JavaScript.valueToCode(block, 'CENTER', Blockly.JavaScript.ORDER_ATOMIC);
+  const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ATOMIC);
+
+  switch (mode) {
+    case 'NUMBER':
+      return `setNumber(${center}, ${value});\n`;
+    case 'NAABER':
+      return `setNeighbor(${center}, ${value});\n`;
+    case 'KAUGUS':
+      return `setDistance(${center}, ${value});\n`;
+    case 'KOORDINAAT':
+      return `setCoordinate(${center}, ${value});\n`;
+    case 'EELMINE_RISTMIK':
+      return `setPreviousIntersection(${center}, ${value});\n`;
+    case 'KAS_KÜLASTATUD':
+      return `setVisited(${center}, ${value});\n`;
+    case 'KAS_AVASTATUD':
+      return `setDiscovered(${center}, ${value});\n`;
+    default:
+      return `null;\n`;
+  }
+};
+
+
+// JavaScript generator
+javascriptGenerator.forBlock[TYPE_SETTER] = function(block: any) {
+  const mode = block.getFieldValue('MODE');
+  const center = Blockly.JavaScript.valueToCode(block, 'CENTER', Blockly.JavaScript.ORDER_ATOMIC);
+
+  switch (mode) {
+    case 'NUMBER':
+      return [`getNumber(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'NAABER':
+      return [`getNeighbor(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'KAUGUS':
+      return [`getDistance(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'KOORDINAAT':
+      return [`getCoordinate(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'EELMINE_RISTMIK':
+      return [`getPreviousIntersection(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'KAS_KÜLASTATUD':
+      return [`isVisited(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'KAS_AVASTATUD':
+      return [`isDiscovered(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    default:
+      return ['null', Blockly.JavaScript.ORDER_ATOMIC];
+  }
+};
+
 const TYPE_IN_LIST = 'ristmik_in_list';
 
 Blockly.Blocks[TYPE_IN_LIST] = {

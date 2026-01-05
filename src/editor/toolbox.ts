@@ -428,7 +428,7 @@ export const toolbox = {
     },
     {
       kind: 'category',
-      name: 'Simulatsioon',
+      name: 'Rakett69',
       colour: '#5BA58C',
       contents: [
         {
@@ -470,6 +470,10 @@ export const toolbox = {
         {
           kind: 'block',
           type: 'simulation_getters',
+        },
+        {
+          kind: 'block',
+          type: 'simulation_setters',
         },
         {
           kind: 'block',
