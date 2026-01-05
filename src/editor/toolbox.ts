@@ -470,6 +470,10 @@ export const toolbox = {
         {
           kind: 'block',
           type: 'simulation_getters',
+        },
+        {
+          kind: 'block',
+          type: 'straightline_distance',
         }
       ],
     },

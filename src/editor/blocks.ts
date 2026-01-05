@@ -141,23 +141,19 @@ Blockly.Blocks[TYPE_GREEDY] = {
   init() {
     this.appendValueInput('CENTER')
       .setCheck('Ristmik')
-      .appendField('Vali');
-
-    this.appendValueInput('LIST')
-      .setCheck('Array')
-      .appendField('naaber loendist');
-
-    this.appendDummyInput()
+      .appendField('tagasta kõige')
       .appendField(new Blockly.FieldDropdown([
-        ['LÄHIM', 'MIN'],
+        ['LÄHEM', 'MIN'],
         ['KAUGEM', 'MAX'],
-      ]), 'MODE');
+      ]), 'MODE')
+      .appendField('naaber ristmikule');
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
   },
 };
 
+// todo
 javascriptGenerator.forBlock[TYPE_GREEDY] = (block) => {
   const center =
     javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC) || 'null';
@@ -301,4 +297,42 @@ javascriptGenerator.forBlock[TYPE_DEBUG] = (block) => {
   const text = block.getFieldValue('TEXT') || '';
 
   return `simulation.debug(${JSON.stringify(text)}, ${value});\n`;
+};
+
+
+const TYPE_STRAIGHT_LINE = 'straightline_distance';
+
+Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
+  init() {
+    this.appendValueInput('CENTER')
+      .setCheck('Ristmik')
+      .appendField('Sirgjooneline distantsi hinnang ristmikust');
+
+    this.appendValueInput('RISTMIKUNI')
+      .setCheck('Array')
+      .appendField('ristmikuni');
+
+    this.setInputsInline(true); // Make inputs appear in a single line
+    this.setOutput(true, 'Ristmik');
+    this.setColour(160);
+  },
+};
+
+// todo
+javascriptGenerator.forBlock[TYPE_STRAIGHT_LINE] = (block) => {
+  const center =
+    javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC) || 'null';
+  const list =
+    javascriptGenerator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
+  const mode = block.getFieldValue('MODE');
+
+  const cmp =
+    mode === 'MIN'
+      ? '(a,b)=>simulation.distanceBetween(center,a)-simulation.distanceBetween(center,b)'
+      : '(a,b)=>simulation.distanceBetween(center,b)-simulation.distanceBetween(center,a)';
+
+  return [
+    `${list}.slice().sort(${cmp})[0]`,
+    Order.FUNCTION_CALL,
+  ];
 };
