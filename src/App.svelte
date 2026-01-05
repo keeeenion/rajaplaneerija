@@ -4,10 +4,9 @@
     activeRunId,
     chooseTab,
     loadWorkspaceFromXml,
-    runAllSimulations,
     runs,
-    runSimulation,
     saveCurrentTab,
+    tabName,
   } from "./editor/editor";
   import {
     downloadBuiltMap,
@@ -18,6 +17,7 @@
   import { setIntersectionAction, showMap } from "./simulation/map_roads";
   import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
   import { debugs } from "./store";
+    import { runAllSimulations, runSimulation } from "./runner";
 
   let building = false;
 
@@ -146,7 +146,7 @@
             on:click={() => chooseTab(idx)}
           >
             <span contenteditable on:blur={(e) => updateRun(e, idx)}
-              >{run.name || `Katse ${idx}`}</span
+              >{tabName(idx)}</span
             >
             <span class="boxes">
               <input

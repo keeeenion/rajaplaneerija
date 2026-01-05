@@ -1,3 +1,4 @@
+import { tabName } from "../editor/editor";
 import { debugs } from "../store";
 import { adjacency, nodeMap, weights } from "./map_data";
 
@@ -69,7 +70,7 @@ export class SimulationReference {
                     : JSON.stringify(arg, null, 2)
             )
             .join(' ');
-        msg = `Katse ${this.runId}: ${msg}`
+        msg = `${tabName(this.runId)}: ${msg}`
         debugs.update(d => [...d, msg])
     };
 

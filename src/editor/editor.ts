@@ -8,16 +8,11 @@ import toolbox from './toolbox'
 // import './blocks/distance_between_intersections';
 // import './blocks/roads_for_intersection';
 import './blocks';
-import { getSimulationReferce, SimulationReference } from "../simulation/reference";
-import { get, writable, type Writable } from "svelte/store";
+import { SimulationReference } from "../simulation/reference";
+import { get, writable } from "svelte/store";
 // import { template } from "./template";
 import { template } from "./template_simple";
-import { app, chosenPointA, chosenPointB } from "../simulation/simulation";
-import { animateVehicle, Car, removeCarsFromMap, spawnVehicle } from "../simulation/car";
-import { resolvePath } from "../simulation/map";
-import { nodeMap } from "../simulation/map_data";
-import { buildSimulation } from "./compiler";
-import { debugs } from "../store";
+import { Car} from "../simulation/car";
 
 type Run = {
     color: string;
@@ -29,6 +24,12 @@ export const runs = writable<Run[]>([
     { color: "#ff0000", xml: null },
 ])
 export const activeRunId = writable<number>(0);
+
+export function tabName(idx: number) {
+    const rs = get(runs)
+    const r = rs[idx]
+    return r.name ?? `Katse ${idx}`
+}
 
 // function restoreStorage() {
 //     const xmllocalStorage.getItem("xmls")
@@ -69,93 +70,10 @@ export function chooseTab(newRunId: number) {
 
 export let workspace: Blockly.Workspace;
 
-type PreparedSim = {
+export type PreparedSim = {
     vehicle: Car;
     simulation: SimulationReference;
     error?: string;
-}
-
-function clearDebugs() {
-    debugs.set([])
-}
-
-function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
-    // reference to the simulation
-    const simulation = getSimulationReferce(idx, A, B);
-
-    // todo: add one car to the screen and make it think
-    const run = get(runs)[idx]
-    const vehicle = spawnVehicle({
-        color: run.color,
-        start: nodeMap.get(A)!,
-    });
-    // vehicle.thinking();
-
-    // run user code for it to derive the path to take
-    let path = buildSimulation(idx, simulation);
-
-    const valid = resolvePath([A, ...path]);
-    if (!valid || !valid.length) {
-        console.error("Teekond on auklik")
-        return { vehicle, simulation, error: "Teekond on auklik" }
-    }
-
-    vehicle.assignPath(valid);
-
-    return { vehicle, simulation };
-}
-
-export function runSimulation() {
-    clearDebugs();
-    removeCarsFromMap();
-
-    const A = get(chosenPointA)
-    const B = get(chosenPointB)
-
-    if (!B || !A) {
-        alert("Vali algus ja lõpp punktid")
-        console.error("dont have A or B points");
-        return;
-    }
-
-    const active = get(activeRunId);
-    const res = prepareSimulation(active, A, B);
-    if (!res) return;
-    const { vehicle, error } = res;
-
-    if (error) {
-        alert(error)
-        console.error(error);
-        return
-    }
-
-    animateVehicle(app, vehicle)
-}
-
-export function runAllSimulations() {
-    clearDebugs();
-    removeCarsFromMap();
-
-
- 
-    const A = get(chosenPointA)
-    const B = get(chosenPointB)
-
-    if (!B || !A) {
-        alert("Vali algus ja lõpp punktid")
-        console.error("dont have A or B points");
-        return;
-    }
-
-    const sims = get(runs)
-        .map((r, idx) => prepareSimulation(idx, A, B))
-        .filter(s => {
-            if (s.error) {
-                debugs.update(d => [...d, `Katse ${s.simulation.runId} ei jooksnud: ${s.error}`])
-            }
-            return !s.error
-        })
-        .map(s => animateVehicle(app, s.vehicle))
 }
 
 export function initEditor() {

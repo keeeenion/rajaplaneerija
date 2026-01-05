@@ -54,6 +54,7 @@ export const mapData: MapData = {
 export const nodeMap = new Map<number, MapNode>();
 export const adjacency: Record<number, number[]> = {};
 export const weights: Record<string, number> = {};
+// todo: replace with get functions
 
 mapData.nodes.forEach(n => {
   nodeMap.set(n.id, n);

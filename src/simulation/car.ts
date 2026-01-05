@@ -31,6 +31,8 @@ export class Car {
 
   private sprite: PIXI.Graphics;
 
+  public onReachGoal?: (car: Car) => void;
+
   constructor(def: CarDef) {
     this.sprite = new PIXI.Graphics();
     this.sprite.beginFill(Number(def.color.replace("#", "0x")));
@@ -59,9 +61,21 @@ export class Car {
 
   update(dt: number) {
     if (!this.path) return;
+
     if (this.t >= 1) {
       this.t = 0;
       this.segment++;
+
+      // If we've reached the last node in the path
+      if (this.segment >= this.path.length - 1) {
+        const finalNode = this.path[this.path.length - 1];
+        this.path = undefined; // Stop moving
+
+        if (this.onReachGoal) {
+          this.onReachGoal(this);
+        }
+        return;
+      }
     }
 
     const a = this.path[this.segment];
@@ -85,7 +99,7 @@ export class Car {
 }
 
 export function initCars(app: PIXI.Application) {
-    app.stage.addChild(carsLayer);
+  app.stage.addChild(carsLayer);
 }
 
 
@@ -102,4 +116,39 @@ export function animateVehicle(app: PIXI.Application, vehicle: Car) {
     const dt = ticker.elapsedMS / 10;
     vehicle.update(dt)
   });
-} 
+}
+
+export async function asyncVehicleAnimation(
+  app: PIXI.Application,
+  vehicle: Car,
+  signal?: AbortSignal
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const cleanup = () => {
+      app.ticker.remove(updateLoop);
+      vehicle.onReachGoal = undefined;
+    };
+
+    const updateLoop = (ticker: PIXI.Ticker) => {
+      const dt = ticker.elapsedMS / 10;
+      vehicle.update(dt);
+    };
+
+    if (signal) {
+      if (signal.aborted) {
+        return reject(new Error("Animation cancelled"));
+      }
+      signal.addEventListener("abort", () => {
+        cleanup();
+        reject(new Error("Animation cancelled"));
+      }, { once: true });
+    }
+
+    vehicle.onReachGoal = () => {
+      cleanup();
+      resolve();
+    };
+
+    app.ticker.add(updateLoop);
+  });
+}
