@@ -146,7 +146,12 @@ export function runAllSimulations() {
 
     const sims = get(runs)
         .map((r, idx) => prepareSimulation(idx, A, B))
-        .filter(s => !s.error)
+        .filter(s => {
+            if (s.error) {
+                debugs.update(d => [...d, `Katse ${s.simulation.runId} ei jooksnud: ${s.error}`])
+            }
+            return !s.error
+        })
         .map(s => animateVehicle(app, s.vehicle))
 }
 

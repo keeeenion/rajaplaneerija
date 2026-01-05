@@ -1,7 +1,7 @@
 import * as Blockly from "blockly";
 import { javascriptGenerator } from "blockly/javascript";
 import type { SimulationReference } from "../simulation/reference";
-import { runs, saveWorkspaceToXml } from "./editor";
+import { activeRunId, runs, saveWorkspaceToXml } from "./editor";
 import { get } from "svelte/store";
 import { error } from "../store";
 
@@ -27,7 +27,8 @@ function runBlocklyCode(code: string, simulation: SimulationReference) {
 export function buildSimulation(idx: number, simulation: SimulationReference) {
     const run = get(runs).find((r, i) => i === idx);
     if (!run) return;
-    run.xml = saveWorkspaceToXml();
+    if (idx == get(activeRunId)) run.xml = saveWorkspaceToXml();
+    if (!run.xml) return;
 
     let code;
     try {

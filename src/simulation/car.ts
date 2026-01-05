@@ -27,6 +27,7 @@ export class Car {
   private path?: MapNode[];
   private segment = 0;
   private t = 0;
+  private laneOffset: number;
 
   private sprite: PIXI.Graphics;
 
@@ -36,6 +37,8 @@ export class Car {
     this.sprite.drawRoundedRect(-8, -4, 16, 8, 3);
     this.sprite.endFill();
     carsLayer.addChild(this.sprite);
+
+    this.laneOffset = (Math.random() - 0.5) * 8;
 
     this.sprite.position.set(def.start.x, def.start.y);
     this.sprite.rotation = 0;
@@ -56,15 +59,9 @@ export class Car {
 
   update(dt: number) {
     if (!this.path) return;
-
     if (this.t >= 1) {
       this.t = 0;
       this.segment++;
-
-      // restart path
-      // if (this.segment >= this.path.length - 1) {
-      //   this.segment = 0;
-      // }
     }
 
     const a = this.path[this.segment];
@@ -74,11 +71,15 @@ export class Car {
     const weight = weights[`${a.id}|${b.id}`];
     this.t += deriveSpeed(weight) * dt * 0.01;
 
-    const x = a.x + (b.x - a.x) * this.t;
-    const y = a.y + (b.y - a.y) * this.t;
+    const baseX = a.x + (b.x - a.x) * this.t;
+    const baseY = a.y + (b.y - a.y) * this.t;
+
     const angle = Math.atan2(b.y - a.y, b.x - a.x);
 
-    this.sprite.position.set(x, y);
+    const offsetX = Math.cos(angle + Math.PI / 2) * this.laneOffset;
+    const offsetY = Math.sin(angle + Math.PI / 2) * this.laneOffset;
+
+    this.sprite.position.set(baseX + offsetX, baseY + offsetY);
     this.sprite.rotation = angle;
   }
 }

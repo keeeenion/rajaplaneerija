@@ -427,3 +427,5 @@ Blockly.Blocks[TYPE_ALL] = {
 javascriptGenerator.forBlock[TYPE_ALL] = () => {
   return ['simulation.allIntersections()', Order.ATOMIC];
 };
+
+// eemalda loendist <blank> element <blank>
