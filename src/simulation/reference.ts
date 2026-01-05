@@ -82,9 +82,9 @@ export class SimulationReference {
 
         switch (key) {
             case 'KAUGUS': entry.distance = value; break;
-            case 'EELMINE_RISTMIK': entry.distance = value; break;
-            case 'KAS_KÜLASTATUD': entry.distance = value; break;
-            case 'KAS_AVASTATUD': entry.distance = value; break;
+            case 'EELMINE_RISTMIK': entry.previous = value; break;
+            case 'KAS_KÜLASTATUD': entry.visited = value; break;
+            case 'KAS_AVASTATUD': entry.discovered = value; break;
         }
 
         this.memory.set(ristmik, entry)
