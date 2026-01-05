@@ -10,7 +10,7 @@ Blockly.Blocks[TYPE_START] = {
       .appendField('Alguspunkt');
 
     this.setOutput(true, 'Ristmik');
-    this.setColour(200);
+    this.setColour(160);
   },
 };
 
@@ -26,7 +26,7 @@ Blockly.Blocks[TYPE_TARGET] = {
       .appendField('Sihtpunkt');
 
     this.setOutput(true, 'Ristmik');
-    this.setColour(200);
+    this.setColour(160);
   },
 };
 
@@ -47,7 +47,7 @@ Blockly.Blocks[TYPE_DISTANCE] = {
     // .appendField('kaugus naabrist B');
 
     this.setOutput(true, 'Number');
-    this.setColour(210);
+    this.setColour(160);
   },
 };
 
@@ -70,7 +70,7 @@ Blockly.Blocks[TYPE_RANDOM_FROM_LIST] = {
       .appendField('Vali juhuslik ristmik loendist');
 
     this.setOutput(true, 'Ristmik');
-    this.setColour(260);
+    this.setColour(160);
   },
 };
 
@@ -90,14 +90,14 @@ Blockly.Blocks[TYPE_LIST_MINUS] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Array')
-      .appendField('Elemendist loendist');
+      .appendField('Elemendid loendist');
 
     this.appendValueInput('B')
       .setCheck('Array')
       .appendField('mis ei sisaldu loendis');
 
     this.setOutput(true, 'Array');
-    this.setColour(260);
+    this.setColour(160);
   },
 };
 
@@ -117,13 +117,14 @@ Blockly.Blocks[TYPE_MIN_DISTANCE] = {
   init() {
     this.appendValueInput('LIST')
       .setCheck('Array')
-      .appendField('Vali lähim ristmik');
+      .appendField('vali väikseima "MÄÄRATUD KAUGUS ALGUSEST" väärtusega ristmik loendist');
 
     this.setOutput(true, 'Ristmik');
-    this.setColour(300);
+    this.setColour(160);
   },
 };
 
+// todo:
 javascriptGenerator.forBlock[TYPE_MIN_DISTANCE] = (block) => {
   const list =
     javascriptGenerator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
@@ -153,7 +154,7 @@ Blockly.Blocks[TYPE_GREEDY] = {
       ]), 'MODE');
 
     this.setOutput(true, 'Ristmik');
-    this.setColour(300);
+    this.setColour(160);
   },
 };
 
@@ -187,10 +188,11 @@ Blockly.Blocks[TYPE_GETTER] = {
         ['NAABRID', 'NAABER'],
         ['KOORDINAAT', 'KOORDINAAT'],
 
-        ['KAUGUS', 'KAUGUS'],
-        ['EELMINE RISTMIK', 'EELMINE_RISTMIK'],
-        ['KAS KÜLASTATUD', 'KAS_KÜLASTATUD'],
-        ['KAS AVASTATUD', 'KAS_AVASTATUD'],
+        // user defined
+        ['MÄÄRATUD KAUGUS ALGUSEST', 'KAUGUS'],
+        ['MÄÄRATUD EELMINE RISTMIK', 'EELMINE_RISTMIK'],
+        ['KAS MÄÄRATUD KÜLASTATUKS', 'KAS_KÜLASTATUD'],
+        ['KAS MÄÄRATUD AVASTATUKS', 'KAS_AVASTATUD'],
       ]), 'MODE')
       .appendField('ristmikult');
 
@@ -200,7 +202,7 @@ Blockly.Blocks[TYPE_GETTER] = {
     this.setOutput(true, this.getOutputType());
 
     this.setInputsInline(true);
-    this.setColour(300);
+    this.setColour(160);
   },
 
   getOutputType() {
@@ -261,7 +263,7 @@ Blockly.Blocks[TYPE_IN_LIST] = {
       .appendField('sisaldub ristmik');
 
     this.setOutput(true, 'Boolean');
-    this.setColour(300);
+    this.setColour(160);
   },
 };
 
@@ -283,7 +285,7 @@ const TYPE_DEBUG = 'debug_block';
 Blockly.Blocks[TYPE_DEBUG] = {
   init() {
     this.appendValueInput('VALUE')
-      .appendField('Debug: ')
+      .appendField('Prindi tahvlile: ')
       .appendField(new Blockly.FieldTextInput('Kirjeldus'), 'TEXT');
 
     this.setPreviousStatement(true);
