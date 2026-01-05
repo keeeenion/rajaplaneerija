@@ -141,7 +141,7 @@ Blockly.Blocks[TYPE_GREEDY] = {
   init() {
     this.appendValueInput('CENTER')
       .setCheck('Ristmik')
-      .appendField('tagasta kõige')
+      .appendField('Tagasta kõige')
       .appendField(new Blockly.FieldDropdown([
         ['LÄHEM', 'MIN'],
         ['KAUGEM', 'MAX'],
@@ -282,7 +282,7 @@ Blockly.Blocks[TYPE_DEBUG] = {
   init() {
     this.appendValueInput('VALUE')
       .appendField('Prindi tahvlile: ')
-      .appendField(new Blockly.FieldTextInput('Kirjeldus'), 'TEXT');
+      .appendField(new Blockly.FieldTextInput('KIRJELDUS'), 'TEXT');
 
     this.setPreviousStatement(true);
     this.setNextStatement(true);
