@@ -174,120 +174,165 @@ javascriptGenerator.forBlock[TYPE_GREEDY] = (block) => {
   ];
 };
 
-const TYPE_GETTER = "simulation_getters"
+const TYPE_GETTER = "simulation_getters";
 
 Blockly.Blocks[TYPE_GETTER] = {
-  init() {
+  init(this: Blockly.Block) {
+    const dropdown = new Blockly.FieldDropdown([
+      ['RISTMIKU NUMBER', 'NUMBER'],
+      ['NAABRID', 'NAABER'],
+      ['KOORDINAAT', 'KOORDINAAT'],
+      ['MÄÄRATUD KAUGUS ALGUSEST', 'KAUGUS'],
+      ['MÄÄRATUD EELMINE RISTMIK', 'EELMINE_RISTMIK'],
+      ['KAS MÄÄRATUD KÜLASTATUKS', 'KAS_KÜLASTATUD'],
+      ['KAS MÄÄRATUD AVASTATUKS', 'KAS_AVASTATUD'],
+    ], (newValue: string) => {
+      (this as any).updateOutput_(newValue);
+      return undefined;
+    });
+
     this.appendDummyInput()
       .appendField('Küsi')
-      .appendField(new Blockly.FieldDropdown([
-        ['RISTMIKU NUMBER', 'NUMBER'],
-        ['NAABRID', 'NAABER'],
-        ['KOORDINAAT', 'KOORDINAAT'],
-
-        // user defined
-        ['MÄÄRATUD KAUGUS ALGUSEST', 'KAUGUS'],
-        ['MÄÄRATUD EELMINE RISTMIK', 'EELMINE_RISTMIK'],
-        ['KAS MÄÄRATUD KÜLASTATUKS', 'KAS_KÜLASTATUD'],
-        ['KAS MÄÄRATUD AVASTATUKS', 'KAS_AVASTATUD'],
-      ]), 'MODE')
+      .appendField(dropdown, 'MODE')
       .appendField('ristmikult');
 
     this.appendValueInput('CENTER')
       .setCheck('Ristmik');
 
-    this.setOutput(true, 'NUMBER');
+    this.setOutput(true, 'Number');
     this.setInputsInline(true);
     this.setColour(160);
   },
 
-  onchange() {
-    this.setOutput(true, this.getOutputType());
-  },
+  updateOutput_(this: Blockly.Block, mode?: string) {
+    const currentMode = mode || this.getFieldValue('MODE');
+    let newType: string | string[] | null;
 
-  getOutputType() {
-    const mode = this.getFieldValue('MODE');
-    switch (mode) {
+    switch (currentMode) {
       case 'NUMBER':
       case 'KAUGUS':
-        return 'Number';
+        newType = 'Number';
+        break;
       case 'NAABER':
       case 'EELMINE_RISTMIK':
-        return 'Ristmik';
+        newType = 'Ristmik';
+        break;
       case 'KOORDINAAT':
-        return 'Array';
+        newType = 'Array';
+        break;
       case 'KAS_KÜLASTATUD':
       case 'KAS_AVASTATUD':
-        return 'Boolean';
+        newType = 'Boolean';
+        break;
       default:
-        return null;
+        newType = null;
+    }
+
+    const connection = this.outputConnection;
+    if (connection && (connection as any).check_ !== newType) {
+      this.setOutput(true, newType);
+    }
+  },
+
+  onchange(this: Blockly.Block, event: Blockly.Events.Abstract) {
+    const ws = this.workspace as Blockly.WorkspaceSvg;
+    if (!ws || (ws.isDragging && ws.isDragging())) return;
+
+    if (event.type === Blockly.Events.BLOCK_CREATE || event.type === Blockly.Events.BLOCK_CHANGE) {
+      (this as any).updateOutput_();
     }
   }
 };
 
-javascriptGenerator.forBlock[TYPE_GETTER] = function(block: any) {
+javascriptGenerator.forBlock[TYPE_GETTER] = function (block: Blockly.Block) {
   const mode = block.getFieldValue('MODE');
-  const ristmik = javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC);
+  const ristmik = javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC) || 'null';
 
-  return [`simulation.getter(${ristmik},"${mode}")`, Order.FUNCTION_CALL];
+  const code = `simulation.getter(${ristmik}, "${mode}")`;
+  return [code, Order.FUNCTION_CALL];
 };
 
-const TYPE_SETTER = "simulation_setters"
+const TYPE_SETTER = "simulation_setters";
 
 Blockly.Blocks[TYPE_SETTER] = {
-  init() {
+  init(this: Blockly.Block) {
+    const dropdown = new Blockly.FieldDropdown([
+      ['MÄÄRATUD KAUGUS ALGUSEST', 'KAUGUS'],
+      ['MÄÄRATUD EELMINE RISTMIK', 'EELMINE_RISTMIK'],
+      ['KAS MÄÄRATUD KÜLASTATUKS', 'KAS_KÜLASTATUD'],
+      ['KAS MÄÄRATUD AVASTATUKS', 'KAS_AVASTATUD'],
+    ], (newValue: string) => {
+      (this as any).updateValueInput_(newValue);
+      return undefined;
+    });
+
     this.appendDummyInput()
-      .appendField('Määra ristmiku')
+      .appendField('Määra ristmiku');
 
     this.appendValueInput('CENTER')
       .setCheck('Ristmik');
 
     this.appendDummyInput()
-      .appendField(new Blockly.FieldDropdown([
-        // user defined
-        ['MÄÄRATUD KAUGUS ALGUSEST', 'KAUGUS'],
-        ['MÄÄRATUD EELMINE RISTMIK', 'EELMINE_RISTMIK'],
-        ['KAS MÄÄRATUD KÜLASTATUKS', 'KAS_KÜLASTATUD'],
-        ['KAS MÄÄRATUD AVASTATUKS', 'KAS_AVASTATUD'],
-      ]), 'MODE')
+      .appendField(dropdown, 'MODE');
 
     this.appendValueInput('VALUE')
-      .setCheck(this.getValueType())
       .appendField('väärtuseks');
 
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(160);
+
+    (this as any).updateValueInput_();
   },
 
-  getValueType() {
-    const mode = this.getFieldValue('MODE');
-    switch (mode) {
+  updateValueInput_(this: Blockly.Block, mode?: string) {
+    const currentMode = mode || this.getFieldValue('MODE');
+    let type: string | null;
+
+    switch (currentMode) {
       case 'EELMINE_RISTMIK':
-        return 'Ristmik';
+        type = 'Ristmik';
+        break;
       case 'KOORDINAAT':
-        return 'Array';
+        type = 'Array';
+        break;
       case 'KAS_KÜLASTATUD':
       case 'KAS_AVASTATUD':
-        return 'Boolean';
+        type = 'Boolean';
+        break;
+      case 'KAUGUS':
+        type = 'Number';
+        break;
       default:
-        return null;
+        type = null;
+    }
+
+    const valueInput = this.getInput('VALUE');
+    if (valueInput && valueInput.connection) {
+      const conn = valueInput.connection as any;
+      if (conn.check_ !== type) {
+        valueInput.setCheck(type);
+      }
     }
   },
 
-  onchange() {
-    const valueInput = this.getInput('VALUE');
-    if (valueInput) {
-      valueInput.setCheck(this.getValueType());
+  onchange(this: Blockly.Block, event: Blockly.Events.Abstract) {
+    const ws = this.workspace as Blockly.WorkspaceSvg;
+    if (!ws || (ws.isDragging && ws.isDragging())) return;
+
+    if (event.type === Blockly.Events.BLOCK_CREATE ||
+      event.type === Blockly.Events.BLOCK_CHANGE ||
+      event.type === Blockly.Events.FINISHED_LOADING) {
+      (this as any).updateValueInput_();
     }
   }
 };
 
-javascriptGenerator.forBlock[TYPE_SETTER] = function(block: any) {
+javascriptGenerator.forBlock[TYPE_SETTER] = function (block: Blockly.Block) {
   const mode = block.getFieldValue('MODE');
-  const ristmik = javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC);
-  const value = javascriptGenerator.valueToCode(block, 'VALUE', Order.ATOMIC);
+  const ristmik = javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC) || 'null';
+  const value = javascriptGenerator.valueToCode(block, 'VALUE', Order.ATOMIC) || 'null';
 
   return `simulation.setter(${ristmik}, "${mode}", ${value});\n`;
 };
