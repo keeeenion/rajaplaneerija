@@ -255,6 +255,7 @@ Blockly.Blocks[TYPE_SETTER] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(160);
+    this.setTooltip('Määrab valitud ristmiku väljadele vastavad väärtused.');
 
     (this as any).updateValueInput_();
   },
