@@ -117,7 +117,7 @@ Blockly.Blocks[TYPE_MIN_DISTANCE] = {
   init() {
     this.appendValueInput('LIST')
       .setCheck('Array')
-      .appendField('vali väikseima "MÄÄRATUD KAUGUS ALGUSEST" väärtusega ristmik loendist');
+      .appendField('Vali väikseima "MÄÄRATUD KAUGUS ALGUSEST" väärtusega ristmik loendist');
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
