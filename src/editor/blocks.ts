@@ -11,6 +11,7 @@ Blockly.Blocks[TYPE_START] = {
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
+    this.setTooltip('Tagastab ristmiku mis vastab kaardil märgitud alguspunktile.');
   },
 };
 
@@ -27,6 +28,7 @@ Blockly.Blocks[TYPE_TARGET] = {
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
+    this.setTooltip('Tagastab ristmiku, mis vastab kaardil märgitud sihtpunktile.');
   },
 };
 
@@ -49,6 +51,7 @@ Blockly.Blocks[TYPE_DISTANCE] = {
     this.setInputsInline(true);
     this.setOutput(true, 'Number');
     this.setColour(160);
+    this.setTooltip('Tagastab numbrilise väärtuse, mis vastab ajakulue ristmiku ja tema naabri vahel.');
   },
 };
 
@@ -72,6 +75,7 @@ Blockly.Blocks[TYPE_RANDOM_FROM_LIST] = {
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
+    this.setTooltip('Tagastab juhusliku ristmiku loendist.');
   },
 };
 
@@ -100,6 +104,7 @@ Blockly.Blocks[TYPE_LIST_MINUS] = {
     this.setInputsInline(true);
     this.setOutput(true, 'Array');
     this.setColour(160);
+    this.setTooltip('Tagastab kahe loendi vahe. Ehk kõik elemendid loendist A, mis ei sisaldu loendis B.');
   },
 };
 
@@ -128,6 +133,7 @@ Blockly.Blocks[TYPE_GREEDY] = {
 
     this.setOutput(true, 'Ristmik');
     this.setColour(160);
+    this.setTooltip('Tagastab ristmiku naabri, milleni liikumise ajakulu on kõige SUUREM/VÄIKSEM.');
   },
 };
 
@@ -169,6 +175,7 @@ Blockly.Blocks[TYPE_GETTER] = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
     this.setColour(160);
+    this.setTooltip('Tagastab valitud ristmiku kohta vastava välja väärtuse.');
   },
 
   updateOutput_(this: Blockly.Block, mode?: string) {
@@ -318,6 +325,7 @@ Blockly.Blocks[TYPE_IN_LIST] = {
     this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
     this.setColour(160);
+    this.setTooltip('Kontrollib, kas ristmik sisaldub loendis. Tagastab tõeväärtuse.');
   },
 };
 
