@@ -98,9 +98,9 @@
     // app.stage.scale.y = window.innerHeight / 600;
   }
 
-  function updateRun(e: Event) {
+  function updateRun(e: Event, idx: number) {
     runs.update((r) => {
-      r[idx].name = e.currentTarget.textContent || `Katse ${idx}`;
+      r[idx].name = (e.currentTarget as HTMLElement)?.textContent || `Katse ${idx}`;
       return r;
     });
   }
@@ -145,7 +145,7 @@
             class:active={idx === $activeRunId}
             on:click={() => chooseTab(idx)}
           >
-            <span contenteditable on:blur={updateRun}
+            <span contenteditable on:blur={(e) => updateRun(e, idx)}
               >{run.name || `Katse ${idx}`}</span
             >
             <span class="boxes">
