@@ -182,7 +182,7 @@ Blockly.Blocks[TYPE_GETTER] = {
     this.appendDummyInput()
       .appendField('Küsi')
       .appendField(new Blockly.FieldDropdown([
-        ['NUMBER', 'NUMBER'],
+        ['RISTMIKU NUMBER', 'NUMBER'],
         ['NAABRID', 'NAABER'],
         ['KOORDINAAT', 'KOORDINAAT'],
 
@@ -229,7 +229,7 @@ javascriptGenerator.forBlock[TYPE_GETTER] = function(block: any) {
   const center = Blockly.JavaScript.valueToCode(block, 'CENTER', Blockly.JavaScript.ORDER_ATOMIC);
 
   switch (mode) {
-    case 'NUMBER':
+    case 'RISTMIKU NUMBER':
       return [`getNumber(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     case 'NAABER':
       return [`getNeighbor(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
@@ -309,7 +309,7 @@ javascriptGenerator.forBlock[TYPE_SETTER] = function(block: any) {
   const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ATOMIC);
 
   switch (mode) {
-    case 'NUMBER':
+    case 'RISTMIKU NUMBER':
       return `setNumber(${center}, ${value});\n`;
     case 'NAABER':
       return `setNeighbor(${center}, ${value});\n`;
