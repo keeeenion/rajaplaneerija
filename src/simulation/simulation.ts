@@ -5,7 +5,7 @@ import { writable } from "svelte/store";
 
 export const app = new PIXI.Application();
 export const chosenPointA = writable<number | undefined>(8)
-export const chosenPointB = writable<number | undefined>(33)
+export const chosenPointB = writable<number | undefined>(12)
 
 export async function initSimulation(map: string, resize = 4) {
   const container = document.getElementById("pixiContainer");
@@ -31,7 +31,7 @@ export async function initSimulation(map: string, resize = 4) {
   loadMap(app, texture)
 
   initRoads(app);
-  // showIntersections(true);
+  showIntersections(true);
   showRoads();
 }
 

@@ -19,6 +19,7 @@
     showIntersections,
   } from "./simulation/map_roads";
   import { app, chosenPointA, chosenPointB, fullscreen } from "./simulation/simulation";
+    import { debugs } from "./store";
 
   let building = false;
 
@@ -108,7 +109,7 @@
         <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
         <button
           class:chosenA={!!$chosenPointA}
-          on:click={() => choosePoint("pointA")}>Vali alguspunk</button
+          on:click={() => choosePoint("pointA")}>Vali alguspunkt</button
         >
         <button
           class:chosenB={!!$chosenPointB}
@@ -159,6 +160,12 @@
           </div>
         {/each}
         <button on:click={() => newRun()}>+ lisa</button>
+      </div>
+
+      <div class="debug-window">
+        {#each $debugs as entry}
+        <p>{entry}</p>
+        {/each}
       </div>
     </section>
   </main>

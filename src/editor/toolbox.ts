@@ -461,11 +461,19 @@ export const toolbox = {
         },
         {
           kind: 'block',
+          type: 'ristmik_in_list',
+        },
+        {
+          kind: 'block',
           type: 'min_distance_intersection',
         },
         {
           kind: 'block',
           type: 'greedy_neighbor',
+        },
+        {
+          kind: 'block',
+          type: 'debug_block',
         }
       ],
     },

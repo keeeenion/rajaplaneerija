@@ -1,3 +1,4 @@
+import { debugs } from "../store";
 import { adjacency, nodeMap, weights } from "./map_data";
 
 export interface Ristmik {
@@ -12,10 +13,12 @@ export interface Ristmik {
 export class SimulationReference {
     A: number;
     B: number;
+    runId: number;
 
-    constructor(pointA: number, pointB: number) {
+    constructor(runId: number, pointA: number, pointB: number) {
         this.A = pointA
         this.B = pointB
+        this.runId = runId
     }
 
     startIntersection(): number {
@@ -48,8 +51,20 @@ export class SimulationReference {
         }
         return list[(r(1, list.length) - 1)]
     };
+
+    debug(...args: any[]) {
+        let msg = args
+            .map(arg =>
+            typeof arg === 'string'
+                ? arg
+                : JSON.stringify(arg, null, 2)
+            )
+            .join(' ');
+        msg = `Katse ${this.runId}: ${msg}`
+        debugs.update(d => [...d, msg])
+    };
 }
 
-export function getSimulationReferce(pointA: number, pointB: number): SimulationReference {
-    return new SimulationReference(pointA, pointB);
+export function getSimulationReferce(runId: number, pointA: number, pointB: number): SimulationReference {
+    return new SimulationReference(runId, pointA, pointB);
 }

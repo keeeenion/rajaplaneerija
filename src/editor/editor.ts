@@ -17,6 +17,7 @@ import { animateVehicle, Car, spawnVehicle } from "../simulation/car";
 import { resolvePath } from "../simulation/map";
 import { nodeMap } from "../simulation/map_data";
 import { buildSimulation } from "./compiler";
+import { debugs } from "../store";
 
 type Run = {
     color: string;
@@ -69,9 +70,13 @@ type PreparedSim = {
     error?: string;
 }
 
+function clearDebugs() {
+    debugs.set([])
+}
+
 function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
     // reference to the simulation
-    const simulation = getSimulationReferce(A, B);
+    const simulation = getSimulationReferce(idx, A, B);
 
     // todo: add one car to the screen and make it think
     const run = get(runs)[idx]
@@ -87,15 +92,17 @@ function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
     const valid = resolvePath([A, ...path]);
     if (!valid) {
         console.error("path is invalid")
-        return {vehicle, simulation, error: "Teekond on auklik"}
+        return { vehicle, simulation, error: "Teekond on auklik" }
     }
 
     vehicle.assignPath(valid);
 
-    return {vehicle, simulation};
+    return { vehicle, simulation };
 }
 
 export function runSimulation() {
+    clearDebugs();
+
     const A = get(chosenPointA)
     const B = get(chosenPointB)
 
@@ -108,12 +115,14 @@ export function runSimulation() {
     const active = get(activeRunId);
     const res = prepareSimulation(active, A, B);
     if (!res) return;
-    const {vehicle} = res;
+    const { vehicle } = res;
 
     animateVehicle(app, vehicle)
 }
 
 export function runAllSimulations() {
+    clearDebugs();
+ 
     const A = get(chosenPointA)
     const B = get(chosenPointB)
 

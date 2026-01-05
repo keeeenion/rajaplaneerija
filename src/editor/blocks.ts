@@ -214,3 +214,56 @@ javascriptGenerator.forBlock[TYPE_GREEDY] = (block) => {
     Order.FUNCTION_CALL,
   ];
 };
+
+const TYPE_IN_LIST = 'ristmik_in_list';
+
+Blockly.Blocks[TYPE_IN_LIST] = {
+  init() {
+    this.appendValueInput('LIST')
+      .setCheck('Array')
+      .appendField('Kas listis');
+
+    this.appendValueInput('RISTMIK')
+      .setCheck('Ristmik')
+      .appendField('on ristmik');
+
+    this.setOutput(true, 'Boolean');
+    this.setColour(300);
+  },
+};
+
+javascriptGenerator.forBlock[TYPE_IN_LIST] = (block) => {
+  const list =
+    javascriptGenerator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
+
+  const ristmik =
+    javascriptGenerator.valueToCode(block, 'RISTMIK', Order.ATOMIC) || 'null';
+
+  return [
+    `${list}.includes(${ristmik})`,
+    Order.FUNCTION_CALL,
+  ];
+};
+
+const TYPE_DEBUG = 'debug_block';
+
+Blockly.Blocks[TYPE_DEBUG] = {
+  init() {
+    this.appendValueInput('VALUE')
+      .appendField('Debug: ')
+      .appendField(new Blockly.FieldTextInput('Kirjeldus'), 'TEXT');
+
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setColour(160);
+  },
+};
+
+javascriptGenerator.forBlock[TYPE_DEBUG] = (block) => {
+  const value =
+    javascriptGenerator.valueToCode(block, 'VALUE', Order.NONE) || 'undefined';
+
+  const text = block.getFieldValue('TEXT') || '';
+
+  return `simulation.debug(${JSON.stringify(text)}, ${value});\n`;
+};

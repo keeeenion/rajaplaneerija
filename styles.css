@@ -101,3 +101,14 @@ header {
 .run:hover {
   cursor: pointer;
 }
+
+.debug-window {
+  background-color: #000;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.debug-window p {
+  color: white;
+  padding-left: 10px;
+}
