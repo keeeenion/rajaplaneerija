@@ -97,6 +97,13 @@
     // app.stage.scale.x = window.innerWidth / 800;
     // app.stage.scale.y = window.innerHeight / 600;
   }
+
+  function updateRun(e: Event) {
+    runs.update((r) => {
+      r[idx].name = e.currentTarget.textContent || `Katse ${idx}`;
+      return r;
+    });
+  }
 </script>
 
 <div class="app">
@@ -107,27 +114,27 @@
 
     <!-- Right side: simulation -->
     <section id="fullscreen" class="simulation-area">
-        <div class="simulation-map">
-          <div id="pixiContainer"></div>
-        </div>
+      <div class="simulation-map">
+        <div id="pixiContainer"></div>
+      </div>
 
-        <div class="sim-controls">
-          <button on:click={() => runSimulation()}>Jooksuta</button>
-          <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
-          <button
-            class:chosenA={!!$chosenPointA}
-            on:click={() => choosePoint("pointA")}>Vali alguspunkt</button
-          >
-          <button
-            class:chosenB={!!$chosenPointB}
-            on:click={() => choosePoint("pointB")}>Vali sihtpunkt</button
-          >
-          <!-- <button on:click={() => startBuilder()}>Map builder</button>
+      <div class="sim-controls">
+        <button on:click={() => runSimulation()}>Jooksuta</button>
+        <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
+        <button
+          class:chosenA={!!$chosenPointA}
+          on:click={() => choosePoint("pointA")}>Vali alguspunkt</button
+        >
+        <button
+          class:chosenB={!!$chosenPointB}
+          on:click={() => choosePoint("pointB")}>Vali sihtpunkt</button
+        >
+        <!-- <button on:click={() => startBuilder()}>Map builder</button>
           <button on:click={() => downloadBuiltMap()}>Export builder</button> -->
-          <!-- <button class="fullscreen" on:click={() => fullscreen()}
+        <!-- <button class="fullscreen" on:click={() => fullscreen()}
             >Fullscreen</button
           > -->
-        </div>
+      </div>
 
       <div class="sim-runs">
         {#each $runs as run, idx}
@@ -138,7 +145,9 @@
             class:active={idx === $activeRunId}
             on:click={() => chooseTab(idx)}
           >
-            <span>Katse {idx}</span>
+            <span contenteditable on:blur={updateRun}
+              >{run.name || `Katse ${idx}`}</span
+            >
             <span class="boxes">
               <input
                 type="color"

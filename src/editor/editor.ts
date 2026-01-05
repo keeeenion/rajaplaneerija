@@ -22,6 +22,7 @@ import { debugs } from "../store";
 type Run = {
     color: string;
     xml: null | string;
+    name?: string;
 }
 
 export const runs = writable<Run[]>([
@@ -134,6 +135,8 @@ export function runSimulation() {
 export function runAllSimulations() {
     clearDebugs();
     removeCarsFromMap();
+
+
  
     const A = get(chosenPointA)
     const B = get(chosenPointB)
