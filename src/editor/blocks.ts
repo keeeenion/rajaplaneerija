@@ -376,7 +376,6 @@ Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
   },
 };
 
-// todo
 javascriptGenerator.forBlock[TYPE_STRAIGHT_LINE] = (block) => {
   const A = javascriptGenerator.valueToCode(block, 'A', Order.ATOMIC);
   const B = javascriptGenerator.valueToCode(block, 'B', Order.ATOMIC);
