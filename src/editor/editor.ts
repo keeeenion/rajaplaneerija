@@ -13,7 +13,7 @@ import { get, writable, type Writable } from "svelte/store";
 import { template } from "./template";
 // import { template } from "./template_simple";
 import { app, chosenPointA, chosenPointB } from "../simulation/simulation";
-import { animateVehicle, Car, spawnVehicle } from "../simulation/car";
+import { animateVehicle, Car, removeCarsFromMap, spawnVehicle } from "../simulation/car";
 import { resolvePath } from "../simulation/map";
 import { nodeMap } from "../simulation/map_data";
 import { buildSimulation } from "./compiler";
@@ -84,9 +84,9 @@ function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
 
     // todo: add one car to the screen and make it think
     const run = get(runs)[idx]
-    const vehicle = spawnVehicle(app, {
+    const vehicle = spawnVehicle({
         color: run.color,
-        start: nodeMap.get(8)!,
+        start: nodeMap.get(A)!,
     });
     // vehicle.thinking();
 
@@ -106,6 +106,7 @@ function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
 
 export function runSimulation() {
     clearDebugs();
+    removeCarsFromMap();
 
     const A = get(chosenPointA)
     const B = get(chosenPointB)
@@ -126,6 +127,7 @@ export function runSimulation() {
 
 export function runAllSimulations() {
     clearDebugs();
+    removeCarsFromMap();
  
     const A = get(chosenPointA)
     const B = get(chosenPointB)

@@ -40,11 +40,11 @@ Blockly.Blocks[TYPE_DISTANCE] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Ristmik')
-      .appendField('Ristmiku A');
+      .appendField('Kahe naabri vaheline kaugus');
 
     this.appendValueInput('B')
       .setCheck('Ristmik')
-      .appendField('kaugus ristmikust B');
+      // .appendField('kaugus naabrist B');
 
     this.setOutput(true, 'Number');
     this.setColour(210);

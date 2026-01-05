@@ -21,23 +21,21 @@ function deriveSpeed(weight: number) {
   return speed;
 }
 
+export const carsLayer = new PIXI.Graphics();
+
 export class Car {
   private path?: MapNode[];
   private segment = 0;
   private t = 0;
 
   private sprite: PIXI.Graphics;
-  private trail: PIXI.Graphics;
 
-  constructor(app: PIXI.Application, def: CarDef) {
-    this.trail = new PIXI.Graphics();
-    app.stage.addChild(this.trail);
-
+  constructor(def: CarDef) {
     this.sprite = new PIXI.Graphics();
     this.sprite.beginFill(Number(def.color.replace("#", "0x")));
     this.sprite.drawRoundedRect(-8, -4, 16, 8, 3);
     this.sprite.endFill();
-    app.stage.addChild(this.sprite);
+    carsLayer.addChild(this.sprite);
 
     this.sprite.position.set(def.start.x, def.start.y);
     this.sprite.rotation = 0;
@@ -85,8 +83,17 @@ export class Car {
   }
 }
 
-export function spawnVehicle(app: PIXI.Application, options: CarDef) {
-  return new Car(app, options)
+export function initCars(app: PIXI.Application) {
+    app.stage.addChild(carsLayer);
+}
+
+
+export function removeCarsFromMap() {
+  carsLayer.removeChildren();
+}
+
+export function spawnVehicle(options: CarDef) {
+  return new Car(options)
 }
 
 export function animateVehicle(app: PIXI.Application, vehicle: Car) {

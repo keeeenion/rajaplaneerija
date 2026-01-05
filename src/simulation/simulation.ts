@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { loadMap } from "./map";
 import { initRoads, showOnlyIntersections, showOnlyRoadsAndChosenPoints } from "./map_roads";
 import { writable } from "svelte/store";
+import { initCars } from "./car";
 
 export const app = new PIXI.Application();
 export const chosenPointA = writable<number | undefined>(8)
@@ -30,6 +31,8 @@ export async function initSimulation(map: string, resize = 4) {
   loadMap(app, texture)
 
   initRoads(app);
+  initCars(app);
+
   showOnlyRoadsAndChosenPoints()
 }
 
