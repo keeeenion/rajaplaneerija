@@ -1,4 +1,8 @@
 import { map_parts as stage1 } from "./weights/stage1";
+import { map_parts as stage2 } from "./weights/stage2";
+import { map_parts as stage3 } from "./weights/stage3";
+import { map_parts as stage4 } from "./weights/stage4";
+import { map_parts as stage5 } from "./weights/stage5";
 
 export interface MapNode {
   id: number;
@@ -56,10 +60,21 @@ export const nodeMap = new Map<number, MapNode>();
 export const adjacency: Record<number, number[]> = {};
 export const weights: Record<string, number> = {};
 
-function prepareStage(stage: number) {
-  let map_parts = stage1;
+function randomizeWeights(data: any[], min: number = 1, max: number = 20) {
+  return data.map(edge => ({
+    ...edge,
+    weight: Math.floor(Math.random() * (max - min + 1)) + min
+  }));
+};
 
-  // todo additional stages
+export function prepareStage(stage: number) {
+  let map_parts = stage1;
+  if (stage === 2) map_parts = stage2;
+  if (stage === 3) map_parts = stage3;
+  if (stage === 4) map_parts = stage4;
+  if (stage === 5) map_parts = stage5;
+
+  map_parts.edges = randomizeWeights(map_parts.edges)
 
   mapData.nodes = map_parts.nodes;
   mapData.edges = map_parts.edges;

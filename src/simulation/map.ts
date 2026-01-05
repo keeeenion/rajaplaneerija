@@ -43,5 +43,4 @@ export function loadMap(app: PIXI.Application, texture: any) {
 
     // const g = new PIXI.Graphics();
     drawBackground(app, texture)
-    // drawRoadsAndIntersections(mapData, g);
 }

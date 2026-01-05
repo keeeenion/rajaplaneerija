@@ -1,10 +1,7 @@
 import * as PIXI from "pixi.js";
-import { mapData, type MapEdge, type MapNode } from "./map_data";
+import { mapData, type MapNode } from "./map_data";
 import { chosenPointA, chosenPointB } from "./simulation";
 import { get } from "svelte/store";
-
-let nodes: MapNode[] = mapData.nodes;
-let edges: MapEdge[] = mapData.edges;
 
 const interactionLayer = new PIXI.Container();
 const roadsLayer = new PIXI.Graphics();
@@ -40,11 +37,11 @@ function chooseIntersection(
 }
 
 function getNode(id: number) {
-    return nodes.find(n => n.id === id);
+    return mapData.nodes.find(n => n.id === id);
 }
 
 function drawEdges() {
-    for (const edge of edges) {
+    for (const edge of mapData.edges) {
         const from = getNode(edge.from);
         const to = getNode(edge.to);
         if (!from || !to) continue;
@@ -67,7 +64,7 @@ function drawEdges() {
 }
 
 function drawNodes(numbers = false, only_chosen = false) {
-    for (const node of nodes) {
+    for (const node of mapData.nodes) {
         const g = new PIXI.Graphics();
 
         const A = get(chosenPointA);
