@@ -372,7 +372,7 @@ Blockly.Blocks[TYPE_STRAIGHT_LINE] = {
       .appendField('ristmikuni');
 
     this.setInputsInline(true);
-    this.setOutput(true, 'Ristmik');
+    this.setOutput(true, 'Number');
     this.setColour(160);
     this.setTooltip('Tagastab numbrilise väärtuse, mis vastab kahe ristmiku vahelisele sirgjoonelisele distantsile koordinaatide põhjal (distants on jagatud 10-ga, et see oleks võrreldavas suurusjärgus teede ajakuludega).');
   },

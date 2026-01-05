@@ -8,6 +8,7 @@ import { buildSimulation } from "./editor/compiler";
 import { resolvePath } from "./simulation/map";
 import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
 import { Stopwatch } from "./timer";
+import type { Competitor } from "./competition";
 
 function clearDebugs() {
     debugs.set([])
@@ -131,7 +132,7 @@ export async function runAllSimulations() {
         .map(startRunner)
 }
 
-export async function runCompetition(A: number, B: number, competitors: Run[]) {
+export async function runCompetition(A: number, B: number, competitors: Competitor[]) {
     await cancelPrevious();
     clearDebugs();
     removeCarsFromMap();
@@ -147,15 +148,14 @@ export async function runCompetition(A: number, B: number, competitors: Run[]) {
     // return times
 
     await Promise.all(competitors.map(
-        async (c, idx) => {
-            const sim = prepareSimulation(idx, A, B)
+        async (c) => {
+            const sim = prepareSimulation(c.idx, A, B)
 
             // todo: sim.error handle
             // add to the timer?
-
-            const timer = new Stopwatch();
+            c.stopwatch.start();
             await startRunner(sim)
-            return timer;
+            c.stopwatch.stop();
         }
     ))
 }
