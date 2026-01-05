@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { loadMap } from "./map";
-import { initRoads, showIntersections, showRoads, showRoadsAndPoints } from "./map_roads";
+import { initRoads, showOnlyIntersections, showOnlyRoadsAndChosenPoints } from "./map_roads";
 import { writable } from "svelte/store";
 
 export const app = new PIXI.Application();
@@ -26,13 +26,11 @@ export async function initSimulation(map: string, resize = 4) {
     antialias: true,
   });
   container.appendChild(app.canvas);
-  
 
   loadMap(app, texture)
 
   initRoads(app);
-  showIntersections(true);
-  showRoads();
+  showOnlyRoadsAndChosenPoints()
 }
 
 export function fullscreen() {

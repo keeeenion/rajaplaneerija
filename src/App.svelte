@@ -7,6 +7,7 @@
     runAllSimulations,
     runs,
     runSimulation,
+    saveCurrentTab,
   } from "./editor/editor";
   import {
     downloadBuiltMap,
@@ -16,7 +17,8 @@
   import type { IntersectionAction } from "./simulation/map_roads";
   import {
     setIntersectionAction,
-    showIntersections,
+    showMap,
+    showOnlyIntersections,
   } from "./simulation/map_roads";
   import { app, chosenPointA, chosenPointB, fullscreen } from "./simulation/simulation";
     import { debugs } from "./store";
@@ -33,7 +35,7 @@
   }
 
   function choosePoint(point: IntersectionAction) {
-    showIntersections();
+    showMap();
     setIntersectionAction(point);
   }
 
@@ -42,7 +44,7 @@
   }
 
   function deleteRun(idx: number) {
-    const r = get(runs);
+    saveCurrentTab();
     runs.update((r) => {
       if (get(activeRunId) === idx) {
         activeRunId.set(0);
@@ -74,7 +76,7 @@
     const name = prompt("Meeskonna nimi:");
     if (!name) return;
 
-    // todo: make sure to save current
+    saveCurrentTab();
 
     const r = get(runs);
     console.log(r[idx].xml)

@@ -39,8 +39,6 @@ export function buildSimulation(idx: number, simulation: SimulationReference) {
     if (!run) return;
     run.xml = saveWorkspaceToXml();
 
-    console.log(run.xml)
-
     let code;
     try {
         code = buildCode(run.xml);

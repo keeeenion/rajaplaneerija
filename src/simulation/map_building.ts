@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import type { MapEdge, MapNode } from "./map_data";
+import type{ MapEdge, MapNode } from "./map_data";
 
 let nodes: MapNode[] = [];
 let edges: MapEdge[] = [];
@@ -109,7 +109,7 @@ function onNodePointerDown(
     // CONNECT MODE
     if (connectingFromId && connectingFromId !== node.id) {
         if (!edgeExists(connectingFromId, node.id)) {
-            edges.push({ from: connectingFromId, to: node.id });
+            edges.push({ from: connectingFromId, to: node.id, weight: 1 });
         }
         connectingFromId = null;
         previewEdge.clear();

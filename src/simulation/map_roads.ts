@@ -29,14 +29,13 @@ function chooseIntersection(
     switch (intersectionAction) {
         case "pointA":
             chosenPointA.set(node.id)
-            showIntersections();
             break;
         case "pointB":
             chosenPointB.set(node.id)
-            showIntersections();
             break;
     }
 
+    showOnlyRoadsAndChosenPoints();
     intersectionAction = undefined;
 }
 
@@ -65,7 +64,7 @@ function drawEdges() {
     }
 }
 
-function drawNodes(text = false, only_chosen = false) {
+function drawNodes(numbers = false, only_chosen = false) {
     for (const node of nodes) {
         const g = new PIXI.Graphics();
 
@@ -89,7 +88,7 @@ function drawNodes(text = false, only_chosen = false) {
         g.x = node.x;
         g.y = node.y;
 
-        if (text) {
+        if (numbers) {
             const t = new PIXI.Text(node.id.toString(), { fontSize: 10, fill: 0x000000 });
             t.anchor.set(0.5);
             g.addChild(t);
@@ -111,22 +110,34 @@ export function initRoads(app: PIXI.Application) {
     interactionLayer.hitArea = app.screen;
 }
 
-export function showRoads() {
+export function showOnlyRoads() {
     roadsLayer.clear();
+    nodeLayer.removeChildren();
+
     drawEdges();
 }
 
-export function showIntersections(debug = false) {
-    nodeLayer.clear();
-    drawNodes(debug);
+export function showOnlyIntersections(numbers = false) {
+    roadsLayer.clear();
+    nodeLayer.removeChildren();
+
+    drawNodes(numbers);
 }
 
-export function showRoadsAndPoints() {
+export function showOnlyRoadsAndChosenPoints() {
     roadsLayer.clear();
-    drawEdges();
+    nodeLayer.removeChildren();
 
-    nodeLayer.clear();
-    drawNodes();
+    drawEdges();
+    drawNodes(true, true);
+}
+
+export function showMap() {
+    roadsLayer.clear();
+    nodeLayer.removeChildren();
+
+    drawEdges();
+    drawNodes(true);
 }
 
 export function resizeInteractionLayer(app: PIXI.Application) {

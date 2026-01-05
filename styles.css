@@ -1,3 +1,9 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 #blocklyDiv {
   width: 100%;
   height: 100%;
@@ -31,6 +37,8 @@ header {
   grid-template-columns: 2fr 1fr;
   gap: 12px;
   padding: 12px;
+  height: 98%;
+  overflow: hidden;
 }
 
 /* Editor area */
@@ -55,7 +63,9 @@ header {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-height: 0;
 }
+
 
 .simulation-map {
   border: 2px solid #000;
@@ -104,8 +114,9 @@ header {
 
 .debug-window {
   background-color: #000;
-  height: 100%;
-  overflow-y: scroll;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .debug-window p {

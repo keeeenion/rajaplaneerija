@@ -45,13 +45,17 @@ export function loadWorkspaceFromXml(xmlText: string | null) {
     Blockly.Xml.domToWorkspace(dom, workspace);
 }
 
-export function chooseTab(newRunId: number) {
+export function saveCurrentTab() {
     const active = get(activeRunId);
     const currentRun = get(runs)[active];
     if (currentRun) {
         currentRun.xml = saveWorkspaceToXml();
     }
+    return currentRun
+}
 
+export function chooseTab(newRunId: number) {
+    saveCurrentTab();
     activeRunId.set(newRunId);
 
     const nextRun = get(runs)[newRunId];
