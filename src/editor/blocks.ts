@@ -248,8 +248,7 @@ javascriptGenerator.forBlock[TYPE_GETTER] = function (block: Blockly.Block) {
   const mode = block.getFieldValue('MODE');
   const ristmik = javascriptGenerator.valueToCode(block, 'CENTER', Order.ATOMIC) || 'null';
 
-  const code = `simulation.getter(${ristmik}, "${mode}")`;
-  return [code, Order.FUNCTION_CALL];
+  return [`simulation.getter(${ristmik}, "${mode}")`, Order.FUNCTION_CALL];
 };
 
 const TYPE_SETTER = "simulation_setters";

@@ -6,28 +6,18 @@ import { get } from "svelte/store";
 import { error } from "../store";
 
 function buildCode(xmlText: string) {
-     // Create a headless workspace
     const headlessWorkspace = new Blockly.Workspace();
-
-    // Parse the XML string
     const xml = Blockly.utils.xml.textToDom(xmlText);
-
-    // Load XML into workspace
     Blockly.Xml.domToWorkspace(xml, headlessWorkspace);
-
-    // Generate JS
     const code = javascriptGenerator.workspaceToCode(headlessWorkspace);
-
-    // Clean up workspace
     headlessWorkspace.dispose();
-
     return code;
 }
 
 function runBlocklyCode(code: string, simulation: SimulationReference) {
     const fn = new Function(
         'simulation',
-        `"use strict";${code};return leia_teekond();`
+        `"use strict";teekond=[];${code};return leia_teekond();`
         // `"use strict";${example_code};return leia_teekond();`
     );
 
