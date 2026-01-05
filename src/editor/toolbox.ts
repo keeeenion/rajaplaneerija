@@ -445,14 +445,6 @@ export const toolbox = {
         },
         {
           kind: 'block',
-          type: 'intersection_neighbors',
-        },
-        {
-          kind: 'block',
-          type: 'intersection_name',
-        },
-        {
-          kind: 'block',
           type: 'random_intersection_from_list',
         },
         {
@@ -474,6 +466,10 @@ export const toolbox = {
         {
           kind: 'block',
           type: 'debug_block',
+        },
+        {
+          kind: 'block',
+          type: 'simulation_getters',
         }
       ],
     },

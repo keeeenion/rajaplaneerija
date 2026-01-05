@@ -10,8 +10,8 @@ import toolbox from './toolbox'
 import './blocks';
 import { getSimulationReferce, SimulationReference } from "../simulation/reference";
 import { get, writable, type Writable } from "svelte/store";
-import { template } from "./template";
-// import { template } from "./template_simple";
+// import { template } from "./template";
+import { template } from "./template_simple";
 import { app, chosenPointA, chosenPointB } from "../simulation/simulation";
 import { animateVehicle, Car, removeCarsFromMap, spawnVehicle } from "../simulation/car";
 import { resolvePath } from "../simulation/map";

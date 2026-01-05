@@ -40,11 +40,11 @@ Blockly.Blocks[TYPE_DISTANCE] = {
   init() {
     this.appendValueInput('A')
       .setCheck('Ristmik')
-      .appendField('Kahe naabri vaheline kaugus');
+      .appendField('Kaal kahe naabri vahel');
 
     this.appendValueInput('B')
       .setCheck('Ristmik')
-      // .appendField('kaugus naabrist B');
+    // .appendField('kaugus naabrist B');
 
     this.setOutput(true, 'Number');
     this.setColour(210);
@@ -59,46 +59,6 @@ javascriptGenerator.forBlock[TYPE_DISTANCE] = (block) => {
     `simulation.distanceBetween(${A}, ${B})`,
     Order.FUNCTION_CALL,
   ];
-};
-
-const TYPE_NEIGHBORS = 'intersection_neighbors';
-
-Blockly.Blocks[TYPE_NEIGHBORS] = {
-  init() {
-    this.appendValueInput('NODE')
-      .setCheck('Ristmik')
-      .appendField('Küsi ristmiku naabreid');
-
-    this.setOutput(true, 'Array');
-    this.setColour(180);
-  },
-};
-
-javascriptGenerator.forBlock[TYPE_NEIGHBORS] = (block) => {
-  const node =
-    javascriptGenerator.valueToCode(block, 'NODE', Order.ATOMIC) || 'null';
-
-  return [`simulation.neighbours(${node})`, Order.MEMBER];
-};
-
-const TYPE_NAME = 'intersection_name';
-
-Blockly.Blocks[TYPE_NAME] = {
-  init() {
-    this.appendValueInput('NODE')
-      .setCheck('Ristmik')
-      .appendField('Küsi ristmiku nime');
-
-    this.setOutput(true, 'String');
-    this.setColour(180);
-  },
-};
-
-javascriptGenerator.forBlock[TYPE_NAME] = (block) => {
-  const node =
-    javascriptGenerator.valueToCode(block, 'NODE', Order.ATOMIC) || 'null';
-
-  return [`${node}.id`, Order.MEMBER];
 };
 
 const TYPE_RANDOM_FROM_LIST = 'random_intersection_from_list';
@@ -213,6 +173,79 @@ javascriptGenerator.forBlock[TYPE_GREEDY] = (block) => {
     `${list}.slice().sort(${cmp})[0]`,
     Order.FUNCTION_CALL,
   ];
+};
+
+const TYPE_GETTER = "simulation_getters"
+
+// Block definition
+Blockly.Blocks[TYPE_GETTER] = {
+  init() {
+    this.appendDummyInput()
+      .appendField('Küsi')
+      .appendField(new Blockly.FieldDropdown([
+        ['NUMBER', 'NUMBER'],
+        ['NAABRID', 'NAABER'],
+        ['KOORDINAAT', 'KOORDINAAT'],
+
+        ['KAUGUS', 'KAUGUS'],
+        ['EELMINE RISTMIK', 'EELMINE_RISTMIK'],
+        ['KAS KÜLASTATUD', 'KAS_KÜLASTATUD'],
+        ['KAS AVASTATUD', 'KAS_AVASTATUD'],
+      ]), 'MODE')
+      .appendField('ristmikult');
+
+    this.appendValueInput('CENTER')
+      .setCheck('Ristmik');
+
+    this.setOutput(true, this.getOutputType());
+
+    this.setInputsInline(true);
+    this.setColour(300);
+  },
+
+  getOutputType() {
+    const mode = this.getFieldValue('MODE');
+    switch (mode) {
+      case 'NUMBER':
+      case 'KAUGUS':
+        return 'Number';
+      case 'NAABER':
+      case 'EELMINE_RISTMIK':
+        return 'Ristmik';
+      case 'KOORDINAAT':
+        return 'Array';
+      case 'KAS_KÜLASTATUD':
+      case 'KAS_AVASTATUD':
+        return 'Boolean';
+      default:
+        return null;
+    }
+  }
+};
+
+// JavaScript generator
+javascriptGenerator.forBlock[TYPE_GETTER] = function(block: any) {
+  const mode = block.getFieldValue('MODE');
+  const center = Blockly.JavaScript.valueToCode(block, 'CENTER', Blockly.JavaScript.ORDER_ATOMIC);
+
+  switch (mode) {
+    case 'NUMBER':
+      return [`getNumber(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'NAABER':
+      return [`getNeighbor(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'KAUGUS':
+      return [`getDistance(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'KOORDINAAT':
+      return [`getCoordinate(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'EELMINE_RISTMIK':
+      return [`getPreviousIntersection(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'KAS_KÜLASTATUD':
+      return [`isVisited(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    case 'KAS_AVASTATUD':
+      return [`isDiscovered(${center})`, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    default:
+      return ['null', Blockly.JavaScript.ORDER_ATOMIC];
+  }
 };
 
 const TYPE_IN_LIST = 'ristmik_in_list';
