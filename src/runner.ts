@@ -34,9 +34,9 @@ function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
 
     // run user code for it to derive the path to take
     const sim = buildSimulation(idx, simulation);
-    
+
     if (!sim) return { vehicle, simulation, error: "Programm katkes" }
-    const {list, taken} = sim;
+    const { list, taken } = sim;
 
     const valid = resolvePath([A, ...list]);
     if (!valid || !valid.length) {
@@ -111,7 +111,7 @@ export async function runAllSimulations() {
     await cancelPrevious();
     clearDebugs();
     removeCarsFromMap();
- 
+
     const A = get(chosenPointA)
     const B = get(chosenPointB)
 
@@ -132,30 +132,76 @@ export async function runAllSimulations() {
         .map(startRunner)
 }
 
+type Combine = {
+    c: Competitor;
+    s: PreparedSim;
+    ms: number;
+}
+
+function average(c: Competitor, A: number, B: number): Combine | undefined {
+    const j = 5;
+    let t: number[] = [];
+    let sim;
+
+    for (let i = 1; i <= j; i++) {
+        sim = prepareSimulation(c.idx, A, B)
+        if (sim.error || !sim.taken_ms) return;
+        t.push(sim.taken_ms)
+    }
+
+    const min = Math.min(...t);
+    const max = Math.max(...t);
+    t = t.filter(n => n !== min && n !== max);
+    const sum = t.reduce((total, num) => total + num, 0);
+
+    return { c, s: prepareSimulation(c.idx, A, B), ms: sum / j }
+}
+
+function voodoo(c: Competitor, A: number, B: number): Combine | undefined {
+    const sim = prepareSimulation(c.idx, A, B)
+    if (sim.error) return;
+    return { c, s: prepareSimulation(c.idx, A, B), ms: sim.simulation.counter }
+}
+
 export async function runCompetition(A: number, B: number, competitors: Competitor[]) {
     await cancelPrevious();
     clearDebugs();
     removeCarsFromMap();
 
-    // animate car thinking animations
-    // time each function solution
-    // create prepared simulations
+    const failed: Competitor[] = [];
+    const valid: Combine[] = [];
+    for (const c of competitors) {
+        const s = voodoo(c, A, B);
+        if (s) valid.push(s)
+        if (!s) failed.push(c)
+    }
 
-    // start timers
-    // update UI
-    // start animating
+    if (failed.length) {
+        alert("Feilinud")
+    }
 
-    // return times
+    const times = valid.map(s => s.ms);
+    console.log("times", times)
 
-    await Promise.all(competitors.map(
-        async (c) => {
-            const sim = prepareSimulation(c.idx, A, B)
+    const smallest = Math.min(...times)
+    const per_diff = 2; // 2 seconds;
 
-            // todo: sim.error handle
-            // add to the timer?
-            c.stopwatch.start();
-            await startRunner(sim)
-            c.stopwatch.stop();
+    await Promise.all(valid.map(
+        async (s) => {
+            const x_diff = s.ms / smallest;
+            const wait_time = Math.min(per_diff * x_diff, 20)
+
+            console.log("wtf", s.c.idx, s.ms, wait_time, smallest, x_diff)
+
+            // sleep
+            s.c.stopwatch.start();
+            s.c.stopwatch.thinking(true)
+            await new Promise(resolve => setTimeout(resolve, wait_time * 1000));
+            s.c.stopwatch.thinking(false)
+            await startRunner(s.s)
+            s.c.stopwatch.stop();
         }
     ))
+
+    return failed
 }
