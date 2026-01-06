@@ -38,7 +38,8 @@ export async function startCompetition() {
     await playCountdown(app)
 
     // list of maps
-    const stages: number[] = [1, 2, 3, 4, 5];
+    // const stages: number[] = [1, 2, 3, 4, 5];
+    const stages: number[] = [1];
     for (const stage of stages) {
         console.log("starting stage", stage)
         const failed = await playStage(stage, competitors);
