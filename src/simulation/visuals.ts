@@ -32,7 +32,7 @@ export async function playCountdown(app: Application): Promise<void> {
                 countdownText.text = count.toString();
                 countdownText.scale.set(2); // Start large for pulse
             } else if (count === 0) {
-                countdownText.text = '🚀';
+                countdownText.text = 'START';
                 countdownText.style.fill = '#ffff00';
             } else {
                 clearInterval(timer);
@@ -54,13 +54,13 @@ export async function playCountdown(app: Application): Promise<void> {
     });
 }
 
-export async function playGameOver(app: Application, score?: number): Promise<void> {
+export async function playGameOver(app: Application): Promise<void> {
     return new Promise((resolve) => {
         const overlay = new Graphics();
         overlay.beginFill(0x000000, 0.7);
         overlay.drawRect(0, 0, app.screen.width, app.screen.height);
         overlay.endFill();
-        overlay.alpha = 0; // Start invisible for fade-in
+        overlay.alpha = 0;
         app.stage.addChild(overlay);
 
         const style = new TextStyle({
@@ -80,50 +80,28 @@ export async function playGameOver(app: Application, score?: number): Promise<vo
         mainText.anchor.set(0.5);
         mainText.x = app.screen.width / 2;
         mainText.y = app.screen.height / 2 - 20;
-        mainText.scale.set(0); // Start at 0 for pop-in effect
+        mainText.scale.set(0);
         app.stage.addChild(mainText);
-
-        let scoreText: Text | null = null;
-        if (score !== undefined) {
-            scoreText = new Text({
-                text: `Final Score: ${score}`,
-                style: { ...style, fontSize: 40, fill: '#ffffff', stroke: { width: 0 } }
-            });
-            scoreText.anchor.set(0.5);
-            scoreText.x = app.screen.width / 2;
-            scoreText.y = app.screen.height / 2 + 80;
-            scoreText.alpha = 0;
-            app.stage.addChild(scoreText);
-        }
 
         let elapsed = 0;
         const animationLoop = (ticker: Ticker) => {
             elapsed += ticker.deltaTime;
 
-            // Fade in background
             if (overlay.alpha < 1) overlay.alpha += 0.05 * ticker.deltaTime;
 
-            // Pop-in and bounce effect for main text
             if (mainText.scale.x < 1) {
                 const grow = 0.08 * ticker.deltaTime;
                 mainText.scale.x += grow;
                 mainText.scale.y += grow;
             }
-
-            // Fade in score after a short delay
-            if (scoreText && elapsed > 30) {
-                scoreText.alpha += 0.05 * ticker.deltaTime;
-            }
         };
 
         app.ticker.add(animationLoop);
 
-        // We'll keep the text on screen for 4 seconds, then resolve
         setTimeout(() => {
             app.ticker.remove(animationLoop);
             app.stage.removeChild(overlay);
             app.stage.removeChild(mainText);
-            if (scoreText) app.stage.removeChild(scoreText);
             resolve();
         }, 4000);
     });
