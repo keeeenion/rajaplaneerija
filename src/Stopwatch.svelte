@@ -44,7 +44,7 @@
         padding: 8px 12px;
         background: #f5f5f5;
         border-radius: 4px;
-        margin-top: 20px;
+        /* margin-top: 20px; */
     }
 
     .name-container {
@@ -71,7 +71,7 @@
 
     .bubble-container {
         position: absolute;
-        top: -25px;
+        top: -12px;
         left: 0;
         display: flex;
         gap: 4px;

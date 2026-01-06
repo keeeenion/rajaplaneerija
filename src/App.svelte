@@ -16,7 +16,7 @@
   import type { IntersectionAction } from "./simulation/map_roads";
   import { setIntersectionAction, showMap } from "./simulation/map_roads";
   import { app, chosenPointA, chosenPointB } from "./simulation/simulation";
-  import { debugs } from "./store";
+  import { debugs, gameover } from "./store";
   import { runAllSimulations, runSimulation } from "./runner";
   import { startCompetition } from "./competition";
   import { stopwatchList } from "./timer";
@@ -109,19 +109,9 @@
     });
   }
 
-  const stoptime = (ms: number): string => {
-    const seconds = (ms / 1000) % 60;
-    const minutes = (ms / (1000 * 60)) % 60;
-    const centiseconds = (ms / 10) % 100;
-
-    return `${Math.floor(minutes).toString().padStart(2, "0")}:${Math.floor(
-      seconds,
-    )
-      .toString()
-      .padStart(2, "0")}.${Math.floor(centiseconds)
-      .toString()
-      .padStart(2, "0")}`;
-  };
+  function done() {
+    stopwatchList.set([])
+  }
 </script>
 
 <div class="app">
@@ -140,7 +130,7 @@
         <div class="sim-controls">
           <button on:click={() => runSimulation()}>Jooksuta</button>
           <button on:click={() => runAllSimulations()}>Jooksuta kõiki</button>
-          <button on:click={() => startCompetition()}>Compete</button>
+          <button on:click={() => startCompetition()}>Käivita võistlus</button>
           <button
             class:chosenA={!!$chosenPointA}
             on:click={() => choosePoint("pointA")}>Vali alguspunkt</button
@@ -167,6 +157,10 @@
             />
           {/each}
         </div>
+
+        {#if $gameover}
+        <button on:click={() => done()}>X</button>
+        {/if}
       {/if}
 
       <div class="sim-runs">
@@ -235,6 +229,6 @@
     display: flex;
     flex-direction: row;
     gap: 8px;
-    padding: 10px;
+    /* padding: 10px; */
   }
 </style>

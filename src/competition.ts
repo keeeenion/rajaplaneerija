@@ -6,6 +6,7 @@ import { app } from "./simulation/simulation";
 import { playCountdown, playGameOver } from "./simulation/visuals";
 import { runCompetition } from "./runner";
 import { addStopwatch, type StopwatchActions } from "./timer";
+import { gameover } from "./store";
 
 export async function playStage(stage: number, competitors: Competitor[]) {
     // prepare map and roads
@@ -21,6 +22,7 @@ export type Competitor = {
 }
 
 export async function startCompetition() {
+    gameover.set(false)
     const r = get(runs)
 
     let competitors: Competitor[] = r.map((c, idx) => ({
@@ -37,15 +39,13 @@ export async function startCompetition() {
 
     // list of maps
     const stages: number[] = [1, 2, 3, 4, 5];
-    const leaderboard = {}
-
     for (const stage of stages) {
         console.log("starting stage", stage)
         const failed = await playStage(stage, competitors);
         competitors = competitors.filter(c => !failed.includes(c))
     }
 
-    // create a popup of leaderboard
     console.log("game over")
+    gameover.set(true)
     await playGameOver(app)
 }

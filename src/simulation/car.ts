@@ -22,11 +22,11 @@ export class Car {
     this.sprite.beginFill(Number(def.color.replace("#", "0x")));
     this.sprite.drawRoundedRect(-8, -4, 16, 8, 3);
     this.sprite.endFill();
-    carsLayer.addChild(this.sprite);
     this.laneOffset = (Math.random() - 0.5) * 8;
   }
 
   spawn(start: MapNode) {
+    carsLayer.addChild(this.sprite);
     this.laneOffset = (Math.random() - 0.5) * 8;
     this.sprite.position.set(start.x, start.y);
     this.sprite.rotation = 0;
