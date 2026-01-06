@@ -74,7 +74,7 @@ export function prepareStage(stage: number) {
   if (stage === 4) map_parts = stage4;
   if (stage === 5) map_parts = stage5;
 
-  //map_parts.edges = randomizeWeights(map_parts.edges)
+  // map_parts.edges = randomizeWeights(map_parts.edges)
 
   mapData.nodes = map_parts.nodes;
   mapData.edges = map_parts.edges;

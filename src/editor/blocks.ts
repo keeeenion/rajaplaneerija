@@ -188,6 +188,8 @@ Blockly.Blocks[TYPE_GETTER] = {
         newType = 'Number';
         break;
       case 'NAABER':
+        newType = 'Array';
+        break;
       case 'EELMINE_RISTMIK':
         newType = 'Ristmik';
         break;
@@ -456,4 +458,25 @@ javascriptGenerator.forBlock[TYPE_REMOVE] = (block, generator) => {
   const code = `${list}.filter(x => x !== ${item})`;
 
   return [code, Order.FUNCTION_CALL];
+};
+
+// tagasta ajaliselt kõige väiksema MÄÄRATUD AJAKULUGA ristmik loendist <blank>
+
+const TYPE_SMALL_TIME = 'smallest_time_from_list';
+
+Blockly.Blocks[TYPE_SMALL_TIME] = {
+  init() {
+    this.appendValueInput('LIST')
+      .appendField('tagasta ajaliselt kõige väiksema MÄÄRATUD AJAKULUGA ristmik loendist')
+      .setCheck('Array');
+
+    this.setOutput(true, 'Ristmik');
+    this.setColour(160);
+    this.setTooltip('Tagastab ristmiku naabri, milleni liikumise ajakulu on kõige SUUREM/VÄIKSEM.');
+  },
+};
+
+javascriptGenerator.forBlock[TYPE_SMALL_TIME] = (block, generator) => {
+  const list = generator.valueToCode(block, 'LIST', Order.MEMBER) || '[]';
+  return [`simulation.findSmallestEntry(${list})`, Order.FUNCTION_CALL];
 };

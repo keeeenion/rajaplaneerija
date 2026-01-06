@@ -157,6 +157,14 @@ export class SimulationReference {
         const index = times.findIndex(t => t === value)
         return neighbours[index]
     }
+
+    findSmallestEntry(list: number[]) {
+        const distances = list.map(r => this.getter(r, "KAUGUS") as number)
+        const smallest = Math.min(...distances)
+        const index = distances.findIndex(s => s === smallest);
+        if (index) return distances[index]
+        return 0
+    }
 }
 
 export function getSimulationReferce(runId: number, pointA: number, pointB: number): SimulationReference {

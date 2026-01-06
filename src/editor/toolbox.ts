@@ -482,6 +482,10 @@ export const toolbox = {
         {
           kind: 'block',
           type: 'straightline_distance',
+        },
+        {
+          kind: 'block',
+          type: 'smallest_time_from_list',
         }
       ],
     },
