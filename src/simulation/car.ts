@@ -3,7 +3,6 @@ import { weights, type MapNode } from "./map_data";
 
 interface CarDef {
   color: string;
-  start: MapNode;
 }
 
 export const carsLayer = new PIXI.Graphics();
@@ -24,10 +23,12 @@ export class Car {
     this.sprite.drawRoundedRect(-8, -4, 16, 8, 3);
     this.sprite.endFill();
     carsLayer.addChild(this.sprite);
-
     this.laneOffset = (Math.random() - 0.5) * 8;
+  }
 
-    this.sprite.position.set(def.start.x, def.start.y);
+  spawn(start: MapNode) {
+    this.laneOffset = (Math.random() - 0.5) * 8;
+    this.sprite.position.set(start.x, start.y);
     this.sprite.rotation = 0;
   }
 
@@ -111,7 +112,7 @@ export function removeCarsFromMap() {
   carsLayer.removeChildren();
 }
 
-export function spawnVehicle(options: CarDef) {
+export function createVehicle(options: CarDef) {
   return new Car(options)
 }
 

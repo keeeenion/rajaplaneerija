@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 import { activeRunId, runs, tabName, type PreparedSim, type Run } from "./editor/editor";
-import { animateVehicle, asyncVehicleAnimation, removeCarsFromMap, spawnVehicle } from "./simulation/car";
+import { animateVehicle, asyncVehicleAnimation, createVehicle, removeCarsFromMap } from "./simulation/car";
 import { getSimulationReferce } from "./simulation/reference";
 import { debugs } from "./store";
 import { nodeMap } from "./simulation/map_data";
@@ -27,9 +27,8 @@ function prepareSimulation(idx: number, A: number, B: number): PreparedSim {
 
     // todo: add one car to the screen and make it think
     const run = get(runs)[idx]
-    const vehicle = spawnVehicle({
+    const vehicle = createVehicle({
         color: run.color,
-        start: nodeMap.get(A)!,
     });
 
     // run user code for it to derive the path to take
@@ -57,7 +56,6 @@ async function cancelPrevious() {
 
 function startRunner(sim: PreparedSim) {
     const controller = new AbortController();
-
     const runner = asyncVehicleAnimation(app, sim.vehicle, controller.signal)
         .then(() => console.log("Goal finished"))
         .catch(() => console.log("Aborted"))
@@ -129,7 +127,10 @@ export async function runAllSimulations() {
             }
             return !s.error
         })
-        .map(startRunner)
+        .map(s => {
+            s.vehicle.spawn(nodeMap.get(A)!)
+            return startRunner(s)   
+        })
 }
 
 type Combine = {
@@ -183,10 +184,12 @@ export async function runCompetition(A: number, B: number, competitors: Competit
     console.log("times", times)
 
     const smallest = Math.min(...times)
-    const per_diff = 1; // 1 second;
+    const per_diff = 1;
 
     await Promise.all(valid.map(
         async (s) => {
+            s.s.vehicle.spawn(nodeMap.get(A)!)
+
             const x_diff = s.ms / smallest;
             const wait_time = Math.min(per_diff * x_diff, 20)
 
