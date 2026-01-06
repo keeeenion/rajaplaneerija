@@ -162,7 +162,7 @@ export class SimulationReference {
         const distances = list.map(r => this.getter(r, "KAUGUS") as number)
         const smallest = Math.min(...distances)
         const index = distances.findIndex(s => s === smallest);
-        if (index >= 0) return distances[index]
+        if (index >= 0) return list[index]
         return 0
     }
 }
