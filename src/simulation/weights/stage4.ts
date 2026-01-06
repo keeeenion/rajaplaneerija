@@ -1,6 +1,6 @@
 export const map_parts = {
-  "A": 29,
-  "B": 33,
+  "A": 22,
+  "B": 16,
   "nodes": [
     { "id": 1, "x": 244, "y": 312 },
     { "id": 2, "x": 264, "y": 268 },
@@ -62,7 +62,7 @@ export const map_parts = {
     { "from": 15, "to": 14, "weight": 3 },
     { "from": 15, "to": 2, "weight": 10 },
     { "from": 16, "to": 15, "weight": 3 },
-    { "from": 16, "to": 17, "weight": 6 },
+    { "from": 16, "to": 17, "weight": 30 },
     { "from": 19, "to": 14, "weight": 5 },
     { "from": 19, "to": 13, "weight": 9 },
     { "from": 20, "to": 17, "weight": 12 },
@@ -80,7 +80,7 @@ export const map_parts = {
     { "from": 23, "to": 24, "weight": 2 },
     { "from": 22, "to": 23, "weight": 7 },
     { "from": 21, "to": 22, "weight": 4 },
-    { "from": 22, "to": 17, "weight": 5 },
+    { "from": 22, "to": 17, "weight": 30 },
     { "from": 20, "to": 21, "weight": 12 },
     { "from": 27, "to": 33, "weight": 19 },
     { "from": 26, "to": 27, "weight": 2 },

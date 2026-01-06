@@ -58,7 +58,7 @@ function drawEdges() {
             .lineTo(to.x, to.y)
             .stroke({
                 width: 5,
-                color: 0xff0000,
+                color: 0xAA4A44,
                 alpha,
             });
     }
