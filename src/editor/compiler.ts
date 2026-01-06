@@ -6,6 +6,9 @@ import { get } from "svelte/store";
 import { error } from "../store";
 import { Stopwatch } from "../timer";
 
+const LOOP_TIMEOUT_MS = 10000;
+const LOOP_TRAP_FN = "__checkLoopTimeout";
+
 function buildCode(xmlText: string) {
     const headlessWorkspace = new Blockly.Workspace();
     const xml = Blockly.utils.xml.textToDom(xmlText);
@@ -20,10 +23,15 @@ function buildCode(xmlText: string) {
 function runBlocklyCode(code: string, simulation: SimulationReference) {
     const fn = new Function(
         'simulation',
-        `"use strict";teekond=[];${code};return leia_teekond();`
-        // `"use strict";${example_code};return leia_teekond();`
+        `"use strict";
+        const __loopStart = Date.now();
+        function ${LOOP_TRAP_FN}() {
+            if (Date.now() - __loopStart > ${LOOP_TIMEOUT_MS}) {
+                throw new Error("Loputu tsukkel (ajalimiit uletatud)");
+            }
+        }
+        teekond=[];${code};return leia_teekond();`
     );
-
     return fn(simulation);
 }
 
@@ -36,13 +44,20 @@ export function buildSimulation(idx: number, simulation: SimulationReference): {
     // const timer = new Stopwatch();
 
     let code;
+    // Save the previous trap setting to be safe
+    const prevTrap = javascriptGenerator.INFINITE_LOOP_TRAP;
+    // Set the trap function call
+    javascriptGenerator.INFINITE_LOOP_TRAP = `${LOOP_TRAP_FN}();`;
     try {
         code = buildCode(run.xml);
     } catch (err: any) {
         console.error(err)
         error.set(err.message)
         alert("Probleem: " + err.message);
-        return;
+        return
+    } finally {
+        // Restore the previous trap setting
+        javascriptGenerator.INFINITE_LOOP_TRAP = prevTrap;
     }
 
     const timer = new Stopwatch();
