@@ -184,7 +184,7 @@ export async function runCompetition(A: number, B: number, competitors: Competit
     console.log("times", times)
 
     const smallest = Math.min(...times)
-    const per_diff = 2; // 2 seconds;
+    const per_diff = 1; // 1 second;
 
     await Promise.all(valid.map(
         async (s) => {
