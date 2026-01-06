@@ -92,10 +92,10 @@ export const map_parts = {
     { "from": 36, "to": 34, "weight": 4 },
     { "from": 36, "to": 29, "weight": 5 },
     { "from": 36, "to": 37, "weight": 5 },
-    { "from": 37, "to": 21, "weight": 6 },
+    { "from": 37, "to": 21, "weight": 1 },
     { "from": 37, "to": 22, "weight": 6 },
     { "from": 37, "to": 30, "weight": 2 },
-    { "from": 31, "to": 37, "weight": 9 },
+    { "from": 31, "to": 37, "weight": 1 },
     { "from": 13, "to": 35, "weight": 31 },
     { "from": 35, "to": 14, "weight": 28 }
   ]
