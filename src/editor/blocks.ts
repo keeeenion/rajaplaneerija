@@ -445,19 +445,17 @@ Blockly.Blocks[TYPE_REMOVE] = {
       .appendField('element');
 
     this.setInputsInline(true);
-    this.setOutput(true, 'Array');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
     this.setColour(260);
-    this.setTooltip('Tagastab uue loendi, kus märgitud element on eemaldatud.');
+    this.setTooltip('Kustutab elemendi antud loendist.');
   },
 };
 
 javascriptGenerator.forBlock[TYPE_REMOVE] = (block, generator) => {
-  const list = generator.valueToCode(block, 'LIST', Order.MEMBER) || '[]';
-  const item = generator.valueToCode(block, 'ITEM', Order.NONE) || 'null';
-
-  const code = `${list}.filter(x => x !== ${item})`;
-
-  return [code, Order.FUNCTION_CALL];
+  const list = generator.valueToCode(block, 'LIST', Order.ATOMIC) || '[]';
+  const item = generator.valueToCode(block, 'ITEM', Order.ATOMIC) || 'null';
+  return `${list} = ${list}.filter(x => x !== ${item});\n`;
 };
 
 // tagasta ajaliselt kõige väiksema MÄÄRATUD AJAKULUGA ristmik loendist <blank>

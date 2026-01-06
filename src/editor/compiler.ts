@@ -10,6 +10,8 @@ function buildCode(xmlText: string) {
     const headlessWorkspace = new Blockly.Workspace();
     const xml = Blockly.utils.xml.textToDom(xmlText);
     Blockly.Xml.domToWorkspace(xml, headlessWorkspace);
+    (window as any).LoopTrap = 15000;
+    javascriptGenerator.INFINITE_LOOP_TRAP = 'if (--window.LoopTrap <= 0) throw new Error("Võimalik lõpmatu tsükkel");\n';
     const code = javascriptGenerator.workspaceToCode(headlessWorkspace);
     headlessWorkspace.dispose();
     return code;
