@@ -1,3 +1,4 @@
+import { chosenPointA, chosenPointB } from "./simulation";
 import { map_parts as stage1 } from "./weights/stage1";
 import { map_parts as stage2 } from "./weights/stage2";
 import { map_parts as stage3 } from "./weights/stage3";
@@ -74,6 +75,9 @@ export function prepareStage(stage: number) {
   if (stage === 4) map_parts = stage4;
   if (stage === 5) map_parts = stage5;
 
+  chosenPointA.set(map_parts.A)
+  chosenPointB.set(map_parts.B)
+
   // map_parts.edges = randomizeWeights(map_parts.edges)
 
   mapData.nodes = map_parts.nodes;
@@ -93,5 +97,3 @@ export function prepareStage(stage: number) {
 
   return [map_parts.A, map_parts.B]
 }
-
-prepareStage(1)
