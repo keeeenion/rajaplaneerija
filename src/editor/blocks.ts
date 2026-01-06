@@ -458,8 +458,6 @@ javascriptGenerator.forBlock[TYPE_REMOVE] = (block, generator) => {
   return `${list} = ${list}.filter(x => x !== ${item});\n`;
 };
 
-// tagasta ajaliselt kõige väiksema MÄÄRATUD AJAKULUGA ristmik loendist <blank>
-
 const TYPE_SMALL_TIME = 'smallest_time_from_list';
 
 Blockly.Blocks[TYPE_SMALL_TIME] = {
