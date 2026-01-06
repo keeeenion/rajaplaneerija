@@ -3,7 +3,7 @@ import { runs, type Run } from "./editor/editor";
 import { prepareStage } from "./simulation/map_data";
 import { showOnlyRoadsAndChosenPoints } from "./simulation/map_roads";
 import { app } from "./simulation/simulation";
-import { playCountdown } from "./simulation/countdown";
+import { playCountdown, playGameOver } from "./simulation/visuals";
 import { runCompetition } from "./runner";
 import { addStopwatch, type StopwatchActions } from "./timer";
 
@@ -47,4 +47,5 @@ export async function startCompetition() {
 
     // create a popup of leaderboard
     console.log("game over")
+    await playGameOver(app)
 }
