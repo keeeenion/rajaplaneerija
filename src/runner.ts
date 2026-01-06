@@ -95,6 +95,7 @@ export async function runSimulation() {
 
     const controller = new AbortController();
 
+    vehicle.spawn(nodeMap.get(A)!)
     const runner = asyncVehicleAnimation(app, vehicle, controller.signal)
         .then(() => console.log("Goal finished"))
         .catch(() => console.log("Aborted"))
@@ -137,25 +138,6 @@ type Combine = {
     c: Competitor;
     s: PreparedSim;
     ms: number;
-}
-
-function average(c: Competitor, A: number, B: number): Combine | undefined {
-    const j = 5;
-    let t: number[] = [];
-    let sim;
-
-    for (let i = 1; i <= j; i++) {
-        sim = prepareSimulation(c.idx, A, B)
-        if (sim.error || !sim.taken_ms) return;
-        t.push(sim.taken_ms)
-    }
-
-    const min = Math.min(...t);
-    const max = Math.max(...t);
-    t = t.filter(n => n !== min && n !== max);
-    const sum = t.reduce((total, num) => total + num, 0);
-
-    return { c, s: prepareSimulation(c.idx, A, B), ms: sum / j }
 }
 
 function voodoo(c: Competitor, A: number, B: number): Combine | undefined {
