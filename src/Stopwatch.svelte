@@ -20,6 +20,14 @@
     <span class="timer-value">{stoptime(state.elapsed)}</span>
 </div>
 
+{#if state.thinking}
+<div class="bubble-container">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+</div>
+{/if}
+
 <style>
     .timer-item {
         display: flex;
@@ -38,5 +46,40 @@
         font-weight: bold;
         font-family: monospace;
         font-size: 15px;
+    }
+
+    .bubble-container {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        height: 20px;
+    }
+
+    .bubble {
+        width: 12px;
+        height: 12px;
+        background-color: #3b82f6; /* A nice blue */
+        border-radius: 50%;
+        animation: bounce 0.6s infinite alternate;
+    }
+
+    /* Stagger the animations using nth-child */
+    .bubble:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .bubble:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+        from {
+            transform: translateY(0);
+        }
+        to {
+            transform: translateY(-15px);
+        }
     }
 </style>

@@ -23,6 +23,7 @@ export class SimulationReference {
     B: number;
     runId: number;
 
+    public counter = 0;
     private memory = new Map<number, MemoryEntry>;
 
     constructor(runId: number, pointA: number, pointB: number) {
@@ -40,16 +41,19 @@ export class SimulationReference {
     };
 
     distanceBetween(a: number | null, b: number | null): number {
+        this.counter += 1;
         return weights[`${a}|${b}`] || 999999;
     };
 
     neighbours(a: number) {
+        this.counter += 1;
         const exists = nodeMap.get(a);
         if (!exists) return [] // undefined maybe?
         return adjacency[a]
     };
 
     randomNeighbour(list: any[]) {
+        this.counter += 1;
         const r = (a: number, b: number) => {
             if (a > b) {
                 // Swap a and b to ensure a is smaller.
@@ -75,6 +79,7 @@ export class SimulationReference {
     };
 
     setter(ristmik: number, key: string, value: any) {
+        this.counter += 1;
         let entry = this.memory.get(ristmik)
         if (!entry) entry = {}
 
@@ -92,6 +97,7 @@ export class SimulationReference {
     };
 
     getter(ristmik: number, key: string) {
+        this.counter += 1;
         let entry = this.memory.get(ristmik)
 
         const r = nodeMap.get(ristmik);
@@ -116,6 +122,7 @@ export class SimulationReference {
     };
 
     pythagoras(a: number, b: number) {
+        this.counter += 1;
         const ristmik_a = nodeMap.get(a)
         const ristmik_b = nodeMap.get(b)
 
@@ -133,10 +140,12 @@ export class SimulationReference {
     };
 
     allIntersections() {
+        this.counter += 1;
         return Array.from(nodeMap.keys()).sort((a, b) => a - b);
     }
 
     greedy_distance(ristmik: number, mode: string) {
+        this.counter += 1;
         const r = nodeMap.get(ristmik)
         if (!r) throw new Error(`Ristmik ${ristmik} ei eksisteeri, et leida ${mode} naaber`)
 

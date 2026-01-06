@@ -13,15 +13,6 @@ export async function playStage(stage: number, competitors: Competitor[]) {
     showOnlyRoadsAndChosenPoints([A, B]);
 
     await runCompetition(A, B, competitors);
-    // animate car thinking animations
-    // time each function solution
-    // create prepared simulations
-
-    // start timers
-    // update UI
-    // start animating
-
-    // return times
 }
 
 export type Competitor = {

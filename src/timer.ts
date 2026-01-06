@@ -16,11 +16,13 @@ export interface StopwatchState {
     id: string;
     elapsed: number;
     running: boolean;
+    thinking: boolean;
 }
 
 export interface StopwatchActions {
     subscribe: Readable<StopwatchState>['subscribe'];
     start: () => void;
+    thinking: (b: boolean) => void;
     stop: () => void;
     reset: () => void;
 }
@@ -31,7 +33,8 @@ export function createStopwatch(id: string): StopwatchActions {
     const { subscribe, update } = writable<StopwatchState>({
         id,
         elapsed: 0,
-        running: false
+        running: false,
+        thinking: false
     });
 
     let interval: ReturnType<typeof setInterval> | undefined;
@@ -53,6 +56,9 @@ export function createStopwatch(id: string): StopwatchActions {
         },
         reset: () => {
             update(s => ({ ...s, elapsed: 0, running: false }));
+        },
+        thinking: (b: boolean) => {
+            update(s => ({ ...s, thinking: b }));
         }
     };
 
