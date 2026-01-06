@@ -11,8 +11,7 @@ export async function playStage(stage: number, competitors: Competitor[]) {
     // prepare map and roads
     const [A, B] = prepareStage(stage);
     showOnlyRoadsAndChosenPoints([A, B]);
-
-    await runCompetition(A, B, competitors);
+    return await runCompetition(A, B, competitors);
 }
 
 export type Competitor = {
@@ -24,7 +23,7 @@ export type Competitor = {
 export async function startCompetition() {
     const r = get(runs)
 
-    const competitors: Competitor[] = r.map((c, idx) => ({
+    let competitors: Competitor[] = r.map((c, idx) => ({
         stopwatch: addStopwatch(String(idx)),
         idx,
         run: r[idx],
@@ -42,9 +41,8 @@ export async function startCompetition() {
 
     for (const stage of stages) {
         console.log("starting stage", stage)
-        await playStage(stage, competitors);
-        // add times to leaderboard
-        // update UI
+        const failed = await playStage(stage, competitors);
+        competitors = competitors.filter(c => !failed.includes(c))
     }
 
     // create a popup of leaderboard

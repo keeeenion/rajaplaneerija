@@ -173,11 +173,10 @@ export async function runCompetition(A: number, B: number, competitors: Competit
     for (const c of competitors) {
         const s = voodoo(c, A, B);
         if (s) valid.push(s)
-        if (!s) failed.push(c)
-    }
-
-    if (failed.length) {
-        alert("Feilinud")
+        if (!s) {
+            failed.push(c)
+            c.stopwatch.failed(true)
+        }
     }
 
     const times = valid.map(s => s.ms);
@@ -191,7 +190,7 @@ export async function runCompetition(A: number, B: number, competitors: Competit
             const x_diff = s.ms / smallest;
             const wait_time = Math.min(per_diff * x_diff, 20)
 
-            console.log("wtf", s.c.idx, s.ms, wait_time, smallest, x_diff)
+            // console.log("wtf", s.c.idx, s.ms, wait_time, smallest, x_diff)
 
             // sleep
             s.c.stopwatch.start();

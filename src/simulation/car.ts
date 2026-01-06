@@ -6,21 +6,6 @@ interface CarDef {
   start: MapNode;
 }
 
-function deriveSpeed(weight: number) {
-  const minWeight = 1;
-  const maxWeight = 30;
-  const minSpeed = 1.7;
-  const maxSpeed = 0.5;
-
-  // clamp weight to valid range
-  weight = Math.max(minWeight, Math.min(maxWeight, weight));
-
-  // linear interpolation
-  const speed = minSpeed + ((weight - minWeight) / (maxWeight - minWeight)) * (maxSpeed - minSpeed);
-
-  return speed;
-}
-
 export const carsLayer = new PIXI.Graphics();
 
 export class Car {
@@ -50,51 +35,70 @@ export class Car {
     this.path = path;
   }
 
-  thinking() {
-    const bubble = new PIXI.Graphics();
-    bubble.beginFill(0xffffff, 0.8);
-    bubble.drawCircle(0, 0, 0);
-    bubble.endFill();
-    bubble.position.set(this.sprite.position.x, this.sprite.position.y);
-    this.sprite.addChild(bubble);
-  }
-
-  update(dt: number) {
+  update(dtMs: number) {
     if (!this.path) return;
-
-    if (this.t >= 1) {
-      this.t = 0;
-      this.segment++;
-
-      // If we've reached the last node in the path
-      if (this.segment >= this.path.length - 1) {
-        const finalNode = this.path[this.path.length - 1];
-        this.path = undefined; // Stop moving
-
-        if (this.onReachGoal) {
-          this.onReachGoal(this);
-        }
-        return;
-      }
-    }
 
     const a = this.path[this.segment];
     const b = this.path[this.segment + 1];
-    if (!b) return;
 
-    const weight = weights[`${a.id}|${b.id}`];
-    this.t += deriveSpeed(weight) * dt * 0.01;
+    // if there's no next node, we stop
+    if (!b) {
+      this.stopAtGoal();
+      return;
+    }
 
-    const baseX = a.x + (b.x - a.x) * this.t;
-    const baseY = a.y + (b.y - a.y) * this.t;
+    const weight = weights[`${a.id}|${b.id}`] || 1;
+    const segmentDurationMs = weight * 1000 * 0.25;
 
-    const angle = Math.atan2(b.y - a.y, b.x - a.x);
+    this.t += dtMs / segmentDurationMs;
+
+    if (this.t >= 1) {
+      const overflowProgress = this.t - 1;
+      this.segment++;
+
+      if (this.segment >= this.path.length - 1) {
+        this.stopAtGoal();
+        return;
+      }
+
+      const nextA = this.path[this.segment];
+      const nextB = this.path[this.segment + 1];
+      const nextWeight = weights[`${nextA.id}|${nextB.id}`] || 1;
+
+      const leftoverMs = overflowProgress * segmentDurationMs;
+      this.t = leftoverMs / (nextWeight * 1000);
+    }
+
+    const currentA = this.path[this.segment];
+    const currentB = this.path[this.segment + 1];
+
+    const baseX = currentA.x + (currentB.x - currentA.x) * this.t;
+    const baseY = currentA.y + (currentB.y - currentA.y) * this.t;
+
+    const angle = Math.atan2(currentB.y - currentA.y, currentB.x - currentA.x);
 
     const offsetX = Math.cos(angle + Math.PI / 2) * this.laneOffset;
     const offsetY = Math.sin(angle + Math.PI / 2) * this.laneOffset;
 
     this.sprite.position.set(baseX + offsetX, baseY + offsetY);
     this.sprite.rotation = angle;
+  }
+
+  private stopAtGoal() {
+    if (!this.path) return;
+    const finalNode = this.path[this.path.length - 1];
+
+    // Snap to final position (including lane offset)
+    const angle = this.sprite.rotation;
+    const offsetX = Math.cos(angle + Math.PI / 2) * this.laneOffset;
+    const offsetY = Math.sin(angle + Math.PI / 2) * this.laneOffset;
+
+    this.sprite.position.set(finalNode.x + offsetX, finalNode.y + offsetY);
+    this.path = undefined;
+
+    if (this.onReachGoal) {
+      this.onReachGoal(this);
+    }
   }
 }
 
@@ -130,7 +134,7 @@ export async function asyncVehicleAnimation(
     };
 
     const updateLoop = (ticker: PIXI.Ticker) => {
-      const dt = ticker.elapsedMS / 10;
+      const dt = ticker.elapsedMS;
       vehicle.update(dt);
     };
 
